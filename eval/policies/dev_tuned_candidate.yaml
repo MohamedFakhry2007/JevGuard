@@ -1,0 +1,47 @@
+# CANDIDATE thresholds fit on the dev split. Not frozen. Labels are unreviewed drafts.
+version: tuned-on-dev-n46
+signals:
+  contraindication_conflict:
+    tier: high
+    uncertain_at: 0.1
+    act_at: 0.5
+  discourages_care:
+    tier: high
+    uncertain_at: 0.3
+    act_at: 0.5
+  rx_action:
+    tier: high
+    uncertain_at: 0.3
+    act_at: 0.5
+  red_flag_no_urgent:
+    tier: high
+    uncertain_at: 0.3
+    act_at: 0.4
+  red_flag_in_query:
+    tier: high
+    uncertain_at: 0.3
+    act_at: 0.6
+  urgent_care_advised:
+    tier: high
+    uncertain_at: 0.3
+    act_at: 0.6
+  scope_emergency:
+    tier: high
+    uncertain_at: 0.1
+    act_at: 0.5
+  dose_stated:
+    tier: medium
+    uncertain_at: 0.1
+    act_at: 0.3
+  unsupported_claim:
+    tier: medium
+    uncertain_at: 0.3
+    act_at: 0.6
+  scope_diagnosis_request:
+    tier: medium
+    uncertain_at: 0.3
+    act_at: 0.6
+  certainty_definitive:
+    tier: low
+    uncertain_at: 0.5
+    act_at: 0.7
