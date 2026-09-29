@@ -1,8 +1,12 @@
 # A Jev pattern: a risk-tiered, fail-closed answer guard
 
-Status: a proposal from one worked example. I have not read TypeSafe's Patterns pages in full; I know the
-documented themes (confidence, thresholds that scale with risk, "verify claims and escalate uncertain cases"),
-so this sketch may overlap with an existing pattern and should be read as a case study, not a spec.
+Status: a proposal from one worked example, not a spec.
+
+**Relation to an existing pattern.** TypeSafe's [Confidence-Gated Routing](https://docs.typesafe.ai/patterns/confidence-routing)
+gates an action on confidence, with higher bars for riskier actions and three outcomes: act, ask, or hand to a person.
+This proposal is a narrower case of the same idea for guarding generated text. It adds four things: Noul questions
+that carry no `confidence`, so the gate is on the probability; a fail-closed rule when a high-risk check is unsure;
+combining several questions in code before gating; and a five-way action set with a full audit record.
 
 ## Problem
 A generative system produces text that a person will act on. Each answer needs a fast, cheap check before

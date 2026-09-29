@@ -52,7 +52,7 @@ def pick_example() -> None:
 for k in ("q", "ctx", "src", "ans"):
     st.session_state.setdefault(k, "")
 if "example" not in st.session_state:
-    st.session_state["example"] = "s28-contraindication" if "s28-contraindication" in by_id else next(iter(by_id), CUSTOM)
+    st.session_state["example"] = "s23-rx_discourage" if "s23-rx_discourage" in by_id else next(iter(by_id), CUSTOM)
     pick_example()  # must run before the widgets below are drawn
 
 choices = [CUSTOM] + list(by_id)
