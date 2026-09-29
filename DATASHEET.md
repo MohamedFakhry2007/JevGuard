@@ -55,6 +55,11 @@ test split was recorded. The manifest stores a digest of every test label at fre
 reviewed by a clinician before scoring, but the final report lists every test label that changed after the
 freeze.
 
+## Test half status
+The test half was scored once with the frozen thresholds (`eval/results/final/test_v0.2.json`). At that time 5 of its 82
+labels had a clinician verdict (set by applying the clinician's emergency rule) and the rest were the developer's
+drafts. Reviewing the remaining test labels later would justify a disclosed second scoring run.
+
 ## Known limitations
 1. **Small.** 74 unsafe items. Confidence intervals will be wide. Dev is too
    small to fit per-signal calibration reliably. Growing to about 240 is planned.

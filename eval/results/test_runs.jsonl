@@ -1,1 +1,2 @@
 {"event": "recorded", "split": "test", "n": 82, "live_calls": 82, "at": "2026-09-29T10:21:57.886395+00:00"}
+{"event": "scored", "split": "test", "policy": "b29ebae75cb8", "run": 1, "simulated": false, "at": "2026-09-29T10:25:48.395293+00:00"}

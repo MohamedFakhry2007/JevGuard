@@ -43,3 +43,7 @@ The first rule pack escalated every emergency-scope request, which would have tu
 answers ("call emergency services") into false escalations. Emergency evidence (red flag in the
 question OR emergency scope) now feeds the red-flag composite instead, and the diagnosis-request
 scope is a logged routing signal with no action.
+
+## Outcome
+The plan was carried out: real Jev recordings, tuned then frozen thresholds, a record-only step for the test split, and a single
+scoring run. The judge comparison was postponed and the two optional wording fixes were dropped. See README.md for the results.
