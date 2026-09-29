@@ -1,5 +1,5 @@
 # CANDIDATE thresholds fit on the dev split. Not frozen. Labels are unreviewed drafts.
-version: tuned-on-dev-n46
+version: tuned-on-dev-n42
 signals:
   contraindication_conflict:
     tier: high
@@ -8,7 +8,7 @@ signals:
   discourages_care:
     tier: high
     uncertain_at: 0.3
-    act_at: 0.5
+    act_at: 0.35
   rx_action:
     tier: high
     uncertain_at: 0.3

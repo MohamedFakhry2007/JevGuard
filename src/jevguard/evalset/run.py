@@ -27,6 +27,16 @@ ITEMS = "eval/data/items.jsonl"
 TEST_LOG = "eval/results/test_runs.jsonl"
 
 
+def with_recordings(items: list[EvalItem], recordings: list[str]) -> tuple[list[EvalItem], list[str]]:
+    """Split items into those recorded in EVERY file and the ids that are not. For interim analysis only:
+    the default runs stay strict so a gap can never be scored silently."""
+    from jevguard.questions import build_request
+    rbs = [ReplayBackend(r) for r in recordings]
+    have = [i for i in items if all(rb.has(*build_request(i.to_turn())) for rb in rbs)]
+    ids = {i.id for i in have}
+    return have, [i.id for i in items if i.id not in ids]
+
+
 def evaluate(system: System, items: list[EvalItem]) -> list[ItemResult]:
     """A ReplayMiss is deliberately not caught here: a gap must stop the run."""
     out = []

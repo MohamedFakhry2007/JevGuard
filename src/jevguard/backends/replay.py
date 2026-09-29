@@ -29,6 +29,9 @@ class ReplayBackend:
     def __len__(self) -> int:
         return len(self._rows)
 
+    def has(self, state: Any, questions: dict[str, dict[str, Any]]) -> bool:
+        return request_key(state, questions) in self._rows
+
     def ask(self, state: Any, questions: dict[str, dict[str, Any]]) -> JevResponse:
         key = request_key(state, questions)
         row = self._rows.get(key)

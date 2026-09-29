@@ -20,7 +20,7 @@ from jevguard.calibration import Calibrator
 from jevguard.engine import JevGuard
 from jevguard.evalset.build import load
 from jevguard.evalset.metrics import ItemResult, rate, summarize
-from jevguard.evalset.run import evaluate
+from jevguard.evalset.run import evaluate, with_recordings
 from jevguard.evalset.schema import EvalItem
 from jevguard.evalset.systems import JevRulesSystem, RulesOnlySystem, SystemOutput
 from jevguard.evalset.tuning import tune_policy
@@ -93,11 +93,16 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--recording", required=True)
     ap.add_argument("--items", default="eval/data/items.jsonl")
     ap.add_argument("--split", choices=["dev"], default="dev", help="test needs a frozen policy; use run.py")
+    ap.add_argument("--skip-missing", action="store_true", help="score only items present in the recording, and list the rest")
     ap.add_argument("--out", default="eval/results/ablation_dev.json")
     ap.add_argument("--policy-out", default="eval/policies/dev_tuned_candidate.yaml")
     args = ap.parse_args(argv)
 
     items = [i for i in load(args.items) if i.split == "dev"]
+    skipped: list[str] = []
+    if args.skip_missing:
+        items, skipped = with_recordings(items, [args.recording])
+        print(f"skipping {len(skipped)} items with no recording: {skipped}")
     by_id = {i.id: i for i in items}
     base = Policy.load()
     rec = args.recording
@@ -112,7 +117,7 @@ def main(argv: list[str] | None = None) -> None:
     }
     rows = [row(k, v) for k, v in systems.items()]
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.out).write_text(json.dumps({"rows": rows, "tuning": tune_report, "note": "dev split only; labels are unreviewed drafts"}, indent=2))
+    Path(args.out).write_text(json.dumps({"rows": rows, "tuning": tune_report, "skipped_missing_recording": skipped, "note": "dev split only; labels are unreviewed drafts"}, indent=2))
     Path(args.policy_out).parent.mkdir(parents=True, exist_ok=True)
     import yaml
     Path(args.policy_out).write_text(

@@ -10,6 +10,7 @@ from pathlib import Path
 
 from jevguard.evalset.gold import expected_action
 from jevguard.evalset.handwritten import HAND
+from jevguard.evalset.review import REVIEW
 from jevguard.evalset.scenarios import SCENARIOS, SRC, Scenario
 from jevguard.evalset.schema import EvalItem, Labels
 
@@ -24,6 +25,7 @@ MUTATION_LABELS: dict[str, dict] = {
     "contraindication": {"contraindication_conflict": True},
     "contra_rx": {"contraindication_conflict": True, "rx_action": True},
     "contra_rx_dose": {"contraindication_conflict": True, "rx_action": True, "dose_stated": True},
+    "contra_dose": {"contraindication_conflict": True, "dose_stated": True},
     "rx_discourage": {"rx_action": True, "discourages_care": True},
     "red_flag_no_urgent": {"urgent_care_advised": False},
     "red_flag_dose": {"urgent_care_advised": False, "dose_stated": True},
@@ -71,7 +73,18 @@ def build_items() -> list[EvalItem]:
     for sc in SCENARIOS:
         items.extend(_from_scenario(sc))
     items.extend(_from_hand(h) for h in HAND)
-    return items
+    return [_apply_review(i) for i in items]
+
+
+def _apply_review(it: EvalItem) -> EvalItem:
+    r = REVIEW.get(it.id)
+    if r is None:
+        return it
+    labels = it.labels.model_copy(update=r.get("labels", {}))
+    return it.model_copy(update={
+        "labels": labels, "expected_action": expected_action(labels), "review_status": "reviewed",
+        "clinician_verdict": r["verdict"], "category": r.get("category", it.category),
+    })
 
 
 def write(items: list[EvalItem], path: Path) -> None:

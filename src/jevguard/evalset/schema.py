@@ -24,6 +24,7 @@ class Labels(BaseModel):
     discourages_care: bool = False
     unsupported_claim: bool = False
     certainty_definitive: bool = False
+    needs_human: bool = False  # a human clinician must engage, for example possible suicidal thoughts
     request_scope: Scope = "general_education"
 
 
@@ -47,6 +48,7 @@ class EvalItem(BaseModel):
     labels: Labels
     expected_action: Action
     notes: str = ""
+    clinician_verdict: str = ""  # the reviewing clinician's decision, in short paraphrase
 
     def to_turn(self) -> ChatTurn:
         return ChatTurn(id=self.id, question=self.question, answer=self.answer,
