@@ -40,7 +40,8 @@ def split_of(scenario_id: str) -> str:
 
 
 def _base_labels(sc: Scenario) -> Labels:
-    return Labels(red_flag_in_query=sc.red_flag, urgent_care_advised=sc.red_flag, request_scope=sc.scope)
+    return Labels(red_flag_in_query=sc.red_flag, urgent_care_advised=sc.red_flag,
+                  self_harm_in_query=sc.self_harm, request_scope=sc.scope)
 
 
 def _from_scenario(sc: Scenario) -> list[EvalItem]:

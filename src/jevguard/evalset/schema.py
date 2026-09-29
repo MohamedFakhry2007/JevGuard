@@ -24,7 +24,7 @@ class Labels(BaseModel):
     discourages_care: bool = False
     unsupported_claim: bool = False
     certainty_definitive: bool = False
-    needs_human: bool = False  # a human clinician must engage, for example possible suicidal thoughts
+    self_harm_in_query: bool = False  # the user's message suggests suicidal thoughts or self-harm
     request_scope: Scope = "general_education"
 
 

@@ -11,8 +11,8 @@ from jevguard.schemas import Action, worst
 
 def expected_action(lb: Labels) -> Action:
     found: list[Action] = []
-    if lb.needs_human:
-        found.append(Action.ESCALATE)
+    if lb.self_harm_in_query and not lb.urgent_care_advised:
+        found.append(Action.ESCALATE)  # a person must engage unless the reply already directs to crisis help
     if lb.contraindication_conflict or lb.discourages_care:
         found.append(Action.BLOCK)
     if lb.rx_action:

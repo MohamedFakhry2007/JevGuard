@@ -3,7 +3,6 @@ from pathlib import Path
 
 import pytest
 
-from jevguard.backends import ReplayBackend
 from jevguard.evalset import ablate
 from jevguard.evalset.build import build_items
 from jevguard.evalset.metrics import ItemResult
@@ -76,20 +75,22 @@ def test_jev_alone_uses_one_naive_cutoff_and_has_no_uncertain_band():
 
 
 @pytest.mark.skipif(not REC.exists(), reason="dev recording not present")
-def test_ablation_runs_on_the_real_recording_and_cross_validation_covers_every_item(tmp_path):
+def test_ablation_runs_on_the_real_recording_and_every_system_scores_the_same_items(tmp_path):
     out = tmp_path / "ab.json"
-    ablate.main(["--recording", str(REC), "--skip-missing", "--out", str(out), "--policy-out", str(tmp_path / "p.yaml")])
+    ablate.main(["--recording", str(REC), "--out", str(out), "--policy-out", str(tmp_path / "p.yaml")])
     rep = json.loads(out.read_text())
     assert rep["rows"][0]["system"] == "rules_only" and len(rep["rows"]) == 5
-    assert len({r["n"] for r in rep["rows"]}) == 1  # every system scored the same items
-    assert rep["skipped_missing_recording"]  # gaps are reported, never scored silently
+    assert len({r["n"] for r in rep["rows"]}) == 1
     assert Policy.load(tmp_path / "p.yaml").signals["discourages_care"].uncertain_at >= MIN_UNCERTAIN
 
 
 @pytest.mark.skipif(not REC.exists(), reason="dev recording not present")
-def test_recording_is_complete_and_from_one_model_version():
-    rb = ReplayBackend(REC)
-    assert len(rb) == 46
+def test_every_dev_item_is_recorded_from_one_model_version():
+    from jevguard.evalset.build import load
+    from jevguard.evalset.run import with_recordings
+    dev = [i for i in load(Path(__file__).resolve().parents[1] / "eval" / "data" / "items.jsonl") if i.split == "dev"]
+    have, missing = with_recordings(dev, [str(REC)])
+    assert missing == [] and len(have) == len(dev)
     rows = [json.loads(line) for line in REC.read_text().splitlines()]
     assert {r["response"]["model"] for r in rows} == {"jev-1.13.0"}
     assert all(r["request_id"] and r["latency_ms"] for r in rows)
@@ -98,5 +99,9 @@ def test_recording_is_complete_and_from_one_model_version():
 @pytest.mark.skipif(not REC.exists(), reason="dev recording not present")
 def test_strict_mode_refuses_to_score_items_with_no_recording(tmp_path):
     from jevguard.backends import ReplayMiss
+    partial = tmp_path / "partial.jsonl"
+    partial.write_text("".join(REC.read_text().splitlines(keepends=True)[:3]))
     with pytest.raises(ReplayMiss):
-        ablate.main(["--recording", str(REC), "--out", str(tmp_path / "x.json"), "--policy-out", str(tmp_path / "p.yaml")])
+        ablate.main(["--recording", str(partial), "--out", str(tmp_path / "x.json"), "--policy-out", str(tmp_path / "p.yaml")])
+    ablate.main(["--recording", str(partial), "--skip-missing", "--out", str(tmp_path / "y.json"), "--policy-out", str(tmp_path / "p.yaml")])
+    assert json.loads((tmp_path / "y.json").read_text())["skipped_missing_recording"]
