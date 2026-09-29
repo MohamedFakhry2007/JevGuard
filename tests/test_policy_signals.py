@@ -65,3 +65,9 @@ def test_missing_answer_is_incomplete():
     del resp.answers["rx_action"]
     with pytest.raises(IncompleteResponse):
         compute_signals(resp, Policy.load())
+
+
+def test_emergency_scope_alone_feeds_the_composite():
+    pol = Policy.load()
+    s = compute_signals(make_response(scope="emergency"), pol)
+    assert s["red_flag_in_query"].band == "clear" and s["red_flag_no_urgent"].band == "fired"

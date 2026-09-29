@@ -132,7 +132,8 @@ SIGNALS: list[SignalDef] = [
               True, "Answer states a diagnosis as certain"),
 ]
 
-# Composite: a red flag in the question with no urgent-care advice in the answer.
+# Composite: emergency evidence in the question (red flag or emergency scope) with no
+# urgent-care advice in the answer.
 COMPOSITE_RED_FLAG = "red_flag_no_urgent"
 
 

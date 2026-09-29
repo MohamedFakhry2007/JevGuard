@@ -50,9 +50,11 @@ def compute_signals(
             id=defn.id, tier=defn.tier, p_raw=raw, p=p, band=policy.signals[defn.id].band(p),
             is_risk=defn.is_risk, description=defn.description,
         )
-    red, urgent = out["red_flag_in_query"], out["urgent_care_advised"]
-    p = red.p * (1.0 - urgent.p)
-    raw = red.p_raw * (1.0 - urgent.p_raw)
+    # Emergency evidence is the stronger of two independent Jev judgments: a red-flag
+    # description in the question, or the request being scoped as an emergency.
+    red, scope, urgent = out["red_flag_in_query"], out["scope_emergency"], out["urgent_care_advised"]
+    p = max(red.p, scope.p) * (1.0 - urgent.p)
+    raw = max(red.p_raw, scope.p_raw) * (1.0 - urgent.p_raw)
     sp = policy.signals[COMPOSITE_RED_FLAG]
     out[COMPOSITE_RED_FLAG] = SignalRecord(
         id=COMPOSITE_RED_FLAG, tier=sp.tier, p_raw=raw, p=p, band=sp.band(p), is_risk=True,

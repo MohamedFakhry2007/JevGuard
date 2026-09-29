@@ -62,9 +62,19 @@ def test_dose_plus_rx_directive_blocks_dose_alone_only_flags():
     assert guard(make_response({"rx_action": 0.95})).check(turn()).action is Action.ESCALATE
 
 
-def test_emergency_scope_escalates_and_diagnosis_request_flags():
-    assert guard(make_response(scope="emergency")).check(turn()).action is Action.ESCALATE
-    assert guard(make_response(scope="diagnosis_request")).check(turn()).action is Action.FLAG
+def test_emergency_scope_without_urgent_advice_is_corrected():
+    d = guard(make_response(scope="emergency")).check(turn())
+    assert d.action is Action.CORRECT and d.final_text.endswith(templates.URGENT_CARE)
+
+
+def test_emergency_scope_with_urgent_advice_is_not_escalated():
+    d = guard(make_response({"urgent_care_advised": 0.97}, scope="emergency")).check(turn("Call 911 now." + CITED))
+    assert d.action is Action.PASS
+
+
+def test_diagnosis_request_is_a_routing_signal_not_an_action():
+    d = guard(make_response(scope="diagnosis_request")).check(turn())
+    assert d.action is Action.PASS and d.signals["scope_diagnosis_request"].band == "fired"
 
 
 def test_definitive_certainty_appends_hedge():
@@ -112,7 +122,7 @@ def test_audit_log_roundtrip(tmp_path):
 
 
 def test_escalate_outranks_block_when_both_fire():
-    resp = make_response({"contraindication_conflict": 0.9}, scope="emergency")
+    resp = make_response({"contraindication_conflict": 0.9, "rx_action": 0.95})
     d = guard(resp).check(turn())
     assert d.action is Action.ESCALATE and d.final_text == templates.ESCALATE_HOLD
-    assert {"jevguard.contraindication_conflict", "jevguard.scope_emergency"} <= {f.rule for f in d.fired}
+    assert {"jevguard.contraindication_conflict", "jevguard.dose_and_rx"} <= {f.rule for f in d.fired}
