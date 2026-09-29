@@ -8,6 +8,6 @@ Custom text works only in the clearly labeled simulated mode (a keyword stand-in
 3. Main file path: `app/streamlit_app.py`. Under Advanced settings choose Python 3.12.
 4. Do not add any secret. Without `TYPESAFE_API_KEY` the app offers only recorded and simulated modes.
 5. Deploy. The first build installs `requirements.txt` (`-e .`), which pulls VLM-Guard from GitHub.
-6. Replace `DEMO_URL` in `README.md` with the app URL.
+6. Put the app URL in `README.md`. The current deployment is https://jevguard-3vezyvexf6dabzamynrpfr.streamlit.app/
 
 The GIF at the top of the README comes from `docs/media/make_demo_gif.py`.

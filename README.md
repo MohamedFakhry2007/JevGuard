@@ -4,7 +4,7 @@
 
 1. **What it is:** a safety check that runs on every answer a medical chatbot writes. Jev scores ten narrow questions in about 0.3 s, and plain VLM-Guard rules turn the scores into pass, flag, correct, block or escalate, with a full audit record.
 2. **Headline numbers:** on 82 sealed synthetic test answers, scored once, it caught 38 of 38 problems, picked exactly the right action for 79%, at a median 282 ms and about $0.05 per 1,000 checks. Synthetic data, small sample, limits below.
-3. **Try it, no install and no key:** live demo (recorded real Jev answers) at DEMO_URL. To publish your own copy, see [docs/DEPLOY.md](docs/DEPLOY.md).
+3. **Try it, no install and no key:** [live demo](https://jevguard-3vezyvexf6dabzamynrpfr.streamlit.app/) (recorded real Jev answers). To publish your own copy, see [docs/DEPLOY.md](docs/DEPLOY.md).
 
 > Unofficial project, built on TypeSafe's public API and SDK. Not affiliated with TypeSafe AI. Research demo, not a medical device, not clinically validated. **All data is synthetic.**
 

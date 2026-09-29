@@ -2,11 +2,15 @@
 
 Status: a proposal from one worked example, not a spec.
 
-**Relation to an existing pattern.** TypeSafe's [Confidence-Gated Routing](https://docs.typesafe.ai/patterns/confidence-routing)
-gates an action on confidence, with higher bars for riskier actions and three outcomes: act, ask, or hand to a person.
-This proposal is a narrower case of the same idea for guarding generated text. It adds four things: Noul questions
-that carry no `confidence`, so the gate is on the probability; a fail-closed rule when a high-risk check is unsure;
-combining several questions in code before gating; and a five-way action set with a full audit record.
+**Relation to the existing patterns.** TypeSafe's [Patterns](https://docs.typesafe.ai/patterns) page lists four:
+[Speculative Fan-Out](https://docs.typesafe.ai/patterns/fan-out) (many questions in one call),
+[Confidence-Gated Routing](https://docs.typesafe.ai/patterns/confidence-routing) (confidence as a second decision axis),
+[Composite Scoring](https://docs.typesafe.ai/patterns/composite-scoring) (combine several dimensions into one score) and
+[Intent Routing](https://docs.typesafe.ai/patterns/intent-routing). This proposal composes the first three for one job,
+guarding generated text, and adds what they do not name: a risk tier per check with its own thresholds, a fail-closed
+rule when a high-risk check is unsure (Noul answers carry no `confidence`, so the gate is on the probability), a
+five-way action set, fixed-template corrections and a full audit record. I have read the index descriptions of the
+four patterns, not their full pages.
 
 ## Problem
 A generative system produces text that a person will act on. Each answer needs a fast, cheap check before
