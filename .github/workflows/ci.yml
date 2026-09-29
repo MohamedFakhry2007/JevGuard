@@ -11,12 +11,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      # vlm-guard's published build backend is invalid; patch a checkout until it is fixed upstream.
-      - name: Install vlm-guard with the build-backend fix
-        run: |
-          git clone --depth 1 https://github.com/MohamedFakhry2007/vlm-guard /tmp/vlm-guard
-          sed -i 's/setuptools.backends._legacy:_Backend/setuptools.build_meta/' /tmp/vlm-guard/pyproject.toml
-          pip install /tmp/vlm-guard
-      - run: pip install --no-deps -e . && pip install pydantic pyyaml pytest pytest-cov ruff typesafe-sdk
+      - run: pip install -e ".[dev]"
       - run: ruff check src tests
       - run: pytest -q --cov=jevguard

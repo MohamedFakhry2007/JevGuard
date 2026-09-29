@@ -14,8 +14,7 @@ A session or machine that can reach `api.typesafe.ai` with a valid credential.
 
 ## Steps
 1. `git fetch origin claude/magical-faraday-7rml4l && git checkout claude/magical-faraday-7rml4l`
-2. `pip install -e ".[dev]"` (vlm-guard needs the build-backend patch in `docs/upstream/` until it
-   is fixed upstream: apply it to a checkout and install that instead).
+2. `pip install -e ".[dev]"`
 3. Dry run on a few items to check the wiring and look at real latency:
    `python -m jevguard.evalset.run --system jev --backend live --recording eval/recordings/pilot.jsonl --split dev`
    then stop it after a handful of items, or copy 5 items into a scratch items file.
