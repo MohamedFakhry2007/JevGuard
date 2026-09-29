@@ -39,7 +39,16 @@ in `eval/recordings/v0.1/`. Record the dev split again into a fresh file:
 Commit both to a new branch (for example `claude/record-v02`). The command resumes if interrupted.
 Do not record the test split.
 
-## Test split (only after thresholds are frozen and the user says so)
-    python -m jevguard.evalset.run --system jev --backend live --placeholder-key --split test --allow-test \
-        --recording eval/recordings/test.jsonl --policy eval/policies/FROZEN.yaml --out eval/results/jev_test.json
-The run is appended to eval/results/test_runs.jsonl. Do it once.
+## Test split (thresholds are frozen; see eval/FREEZE.json)
+Record the 82 final-test answers. This only records; it prints nothing about the answers and scores nothing:
+
+    python -m jevguard.evalset.record --split test --allow-test --placeholder-key \
+        --recording eval/recordings/test.jsonl
+
+Commit `eval/recordings/test.jsonl` and `eval/results/test_runs.jsonl` to a new branch (for example
+`claude/record-test`). Do not run any other command on the test split. Scoring is a separate step that runs once:
+
+    python -m jevguard.evalset.final --recording eval/recordings/test.jsonl --allow-test
+
+It refuses unless the frozen thresholds and question wording are unchanged and the recording is complete, and it
+refuses a second run unless `--again` is passed, in which case the report says it is a repeat.

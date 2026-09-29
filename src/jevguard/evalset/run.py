@@ -99,6 +99,14 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.split != "dev" and not args.allow_test:
         raise SystemExit("the test split is locked: fit and freeze on dev first, then pass --allow-test")
+    if args.split != "dev" and args.system == "jev":
+        from jevguard.freeze import FreezeError, verify
+        if not args.policy:
+            raise SystemExit("refusing to touch the test split: pass --policy eval/policies/FROZEN_v0.2.yaml")
+        try:
+            verify(args.policy)
+        except FreezeError as exc:
+            raise SystemExit(f"refusing to touch the test split: {exc}") from exc
     if args.system == "jev" and args.backend != "simulated" and not args.recording:
         raise SystemExit("--recording is required for the replay and live backends")
 
