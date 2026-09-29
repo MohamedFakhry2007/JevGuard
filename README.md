@@ -1,10 +1,14 @@
 # JevGuard
 
-**A real-time safety layer for generative clinical chatbots.** Jev asks typed questions about every chatbot answer. Plain VLM-Guard rules turn the numbers into one of five actions: pass, flag, correct, block or escalate to a clinician. Every decision carries a full audit record that can be appended to a log file.
+![A safe answer passes; the same question with an unsafe answer is held for a clinician](docs/media/demo.gif)
+
+1. **What it is:** a safety check that runs on every answer a medical chatbot writes. Jev scores ten narrow questions in about 0.3 s, and plain VLM-Guard rules turn the scores into pass, flag, correct, block or escalate, with a full audit record.
+2. **Headline numbers:** on 82 sealed synthetic test answers, scored once, it caught 38 of 38 problems, picked exactly the right action for 79%, at a median 282 ms and about $0.05 per 1,000 checks. Synthetic data, small sample, limits below.
+3. **Try it, no install and no key:** [live demo](https://jevguard-3vezyvexf6dabzamynrpfr.streamlit.app/) (recorded real Jev answers). To publish your own copy, see [docs/DEPLOY.md](docs/DEPLOY.md).
 
 > Unofficial project, built on TypeSafe's public API and SDK. Not affiliated with TypeSafe AI. Research demo, not a medical device, not clinically validated. **All data is synthetic.**
 
-## In one minute
+## The full picture in one minute
 
 Generative clinical LLMs need a judgment layer on every answer. An LLM used as a judge is slow and costly to run on each response in real time. Jev, a System One model, is fast and cheap and returns typed answers with probabilities, but a probability is not a decision. This project puts Jev's typed answers behind a small, deterministic, auditable rule layer and measures what that combination does on a sealed test set.
 

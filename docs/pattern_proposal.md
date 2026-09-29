@@ -1,8 +1,16 @@
 # A Jev pattern: a risk-tiered, fail-closed answer guard
 
-Status: a proposal from one worked example. I have not read TypeSafe's Patterns pages in full; I know the
-documented themes (confidence, thresholds that scale with risk, "verify claims and escalate uncertain cases"),
-so this sketch may overlap with an existing pattern and should be read as a case study, not a spec.
+Status: a proposal from one worked example, not a spec.
+
+**Relation to the existing patterns.** TypeSafe's [Patterns](https://docs.typesafe.ai/patterns) page lists four:
+[Speculative Fan-Out](https://docs.typesafe.ai/patterns/fan-out) (many questions in one call),
+[Confidence-Gated Routing](https://docs.typesafe.ai/patterns/confidence-routing) (confidence as a second decision axis),
+[Composite Scoring](https://docs.typesafe.ai/patterns/composite-scoring) (combine several dimensions into one score) and
+[Intent Routing](https://docs.typesafe.ai/patterns/intent-routing). This proposal composes the first three for one job,
+guarding generated text, and adds what they do not name: a risk tier per check with its own thresholds, a fail-closed
+rule when a high-risk check is unsure (Noul answers carry no `confidence`, so the gate is on the probability), a
+five-way action set, fixed-template corrections and a full audit record. I have read the index descriptions of the
+four patterns, not their full pages.
 
 ## Problem
 A generative system produces text that a person will act on. Each answer needs a fast, cheap check before

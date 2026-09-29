@@ -52,7 +52,7 @@ def test_app_opens_on_an_example_and_shows_a_decision_without_errors():
     at = AppTest.from_file(APP, default_timeout=30).run()
     assert not at.exception
     assert any("block" in m.value for m in at.markdown) or any("escalate" in m.value for m in at.markdown)
-    assert at.selectbox(key="example").value == "s28-contraindication"
+    assert at.selectbox(key="example").value == "s23-rx_discourage"
 
 
 @needs_rec
