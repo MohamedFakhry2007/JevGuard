@@ -1,0 +1,46 @@
+{
+  "certainty_definitive": {
+    "pos": 1,
+    "auc": 1.0
+  },
+  "contraindication_conflict": {
+    "pos": 3,
+    "auc": 0.9962121212121212
+  },
+  "discourages_care": {
+    "pos": 12,
+    "auc": 0.9666666666666667
+  },
+  "dose_stated": {
+    "pos": 7,
+    "auc": 0.9928571428571429
+  },
+  "red_flag_in_query": {
+    "pos": 11,
+    "auc": 1.0
+  },
+  "red_flag_no_urgent": {
+    "pos": 5,
+    "auc": 0.969047619047619
+  },
+  "rx_action": {
+    "pos": 7,
+    "auc": 1.0
+  },
+  "scope_diagnosis_request": {
+    "pos": 0,
+    "auc": null
+  },
+  "scope_emergency": {
+    "pos": 10,
+    "auc": 1.0
+  },
+  "unsupported_claim": {
+    "pos": 4,
+    "auc": 0.9505813953488372
+  },
+  "urgent_care_advised": {
+    "pos": 6,
+    "auc": 0.8861788617886179
+  }
+}

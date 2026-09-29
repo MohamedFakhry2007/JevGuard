@@ -1,0 +1,70 @@
+"""Turn a Jev response into calibrated, banded risk signals."""
+from __future__ import annotations
+
+from pydantic import BaseModel
+
+from jevguard.calibration import Calibrator
+from jevguard.policy import Band, Policy
+from jevguard.questions import COMPOSITE_RED_FLAG, COMPOSITE_SELF_HARM, SIGNALS, SignalDef
+from jevguard.schemas import ChoiceAnswer, JevResponse, NoulAnswer, ScoreAnswer, Tier
+
+
+class IncompleteResponse(Exception):
+    """The response lacks an answer we need, or has the wrong type. The guard fails closed."""
+
+
+class SignalRecord(BaseModel):
+    id: str
+    tier: Tier
+    p_raw: float
+    p: float
+    band: Band
+    is_risk: bool
+    description: str = ""
+
+
+def _raw(defn: SignalDef, resp: JevResponse) -> float:
+    ans = resp.answers.get(defn.question_id)
+    if ans is None:
+        raise IncompleteResponse(f"missing answer for {defn.question_id}")
+    if defn.kind == "noul" and isinstance(ans, NoulAnswer):
+        return ans.noul
+    if defn.kind == "choice_option" and isinstance(ans, ChoiceAnswer):
+        if defn.arg not in ans.probabilities:
+            raise IncompleteResponse(f"{defn.question_id} lacks option {defn.arg}")
+        return ans.probabilities[str(defn.arg)]
+    if defn.kind == "score_at_least" and isinstance(ans, ScoreAnswer):
+        return sum(v for k, v in ans.probabilities.items() if int(k) >= int(defn.arg))
+    raise IncompleteResponse(f"unexpected answer type for {defn.question_id}")
+
+
+def compute_signals(
+    resp: JevResponse, policy: Policy, calibrators: dict[str, Calibrator] | None = None
+) -> dict[str, SignalRecord]:
+    calibrators = calibrators or {}
+    out: dict[str, SignalRecord] = {}
+    for defn in SIGNALS:
+        raw = _raw(defn, resp)
+        p = calibrators.get(defn.id, Calibrator()).apply(raw)
+        out[defn.id] = SignalRecord(
+            id=defn.id, tier=defn.tier, p_raw=raw, p=p, band=policy.signals[defn.id].band(p),
+            is_risk=defn.is_risk, description=defn.description,
+        )
+    # Emergency evidence is the stronger of two independent Jev judgments: a red-flag
+    # description in the question, or the request being scoped as an emergency.
+    red, scope, urgent = out["red_flag_in_query"], out["scope_emergency"], out["urgent_care_advised"]
+    p = max(red.p, scope.p) * (1.0 - urgent.p)
+    raw = max(red.p_raw, scope.p_raw) * (1.0 - urgent.p_raw)
+    sp = policy.signals[COMPOSITE_RED_FLAG]
+    out[COMPOSITE_RED_FLAG] = SignalRecord(
+        id=COMPOSITE_RED_FLAG, tier=sp.tier, p_raw=raw, p=p, band=sp.band(p), is_risk=True,
+        description="Red flag in question and no urgent-care advice in answer",
+    )
+    self_harm = out["self_harm_in_query"]
+    sh = policy.signals[COMPOSITE_SELF_HARM]
+    p2 = self_harm.p * (1.0 - urgent.p)
+    out[COMPOSITE_SELF_HARM] = SignalRecord(
+        id=COMPOSITE_SELF_HARM, tier=sh.tier, p_raw=self_harm.p_raw * (1.0 - urgent.p_raw), p=p2, band=sh.band(p2),
+        is_risk=True, description="Self-harm message and no urgent or crisis help in the answer",
+    )
+    return out
