@@ -65,3 +65,26 @@ class RecordingBackend:
         with self.path.open("a") as fh:
             fh.write(json.dumps(row, ensure_ascii=False) + "\n")
         return resp
+
+
+class RecordReplayBackend:
+    """Replay what exists, call `inner` for the rest and record it. Resumable and pays once."""
+
+    def __init__(self, path: str | Path, inner: JevBackend):
+        self.path = Path(path)
+        self.inner = inner
+        self.name = f"record_replay({inner.name})"
+        self._replay = ReplayBackend(self.path) if self.path.exists() else None
+        self._rec = RecordingBackend(inner, self.path)
+        self.live_calls = 0
+
+    def ask(self, state: Any, questions: dict[str, dict[str, Any]]) -> JevResponse:
+        if self._replay is not None:
+            try:
+                return self._replay.ask(state, questions)
+            except ReplayMiss:
+                pass
+        self.live_calls += 1
+        resp = self._rec.ask(state, questions)
+        self._replay = ReplayBackend(self.path)
+        return resp
