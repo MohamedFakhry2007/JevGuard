@@ -29,19 +29,17 @@ A session or machine that can reach `api.typesafe.ai` with a valid credential.
 About 46 dev items at roughly 500 to 1,800 input tokens each. At the documented $42 per billion
 input tokens that is a fraction of a cent. Expect a few seconds of wall time.
 
-## Repeatability run (recommended before freezing)
-Live Jev answers were not identical between two recordings of the same 46 dev items (the
-pilot and the committed run differed on 1 false intervention and 2 escalations). To measure
-that spread, record the dev split two more times into separate files:
+## Question set v0.2 (self-harm question added)
+Adding a question changes every request, so nothing recorded for v0.1 can be replayed. The v0.1 files are kept
+in `eval/recordings/v0.1/`. Record the dev split again into a fresh file:
 
     python -m jevguard.evalset.run --system jev --backend live --placeholder-key --split dev \
-        --recording eval/recordings/dev_repeat1.jsonl --out eval/results/jev_dev_repeat1.json
-    python -m jevguard.evalset.run --system jev --backend live --placeholder-key --split dev \
-        --recording eval/recordings/dev_repeat2.jsonl --out eval/results/jev_dev_repeat2.json
+        --recording eval/recordings/dev.jsonl --out eval/results/jev_dev_raw.json
 
-Commit both to a new branch (for example `claude/record-repeat`). Cost is about $0.002 each.
+Commit both to a new branch (for example `claude/record-v02`). The command resumes if interrupted.
+Do not record the test split.
 
-## Test split (only after thresholds are frozen and you say so)
+## Test split (only after thresholds are frozen and the user says so)
     python -m jevguard.evalset.run --system jev --backend live --placeholder-key --split test --allow-test \
         --recording eval/recordings/test.jsonl --policy eval/policies/FROZEN.yaml --out eval/results/jev_test.json
 The run is appended to eval/results/test_runs.jsonl. Do it once.

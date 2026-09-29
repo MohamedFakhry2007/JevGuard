@@ -126,3 +126,27 @@ def test_escalate_outranks_block_when_both_fire():
     d = guard(resp).check(turn())
     assert d.action is Action.ESCALATE and d.final_text == templates.ESCALATE_HOLD
     assert {"jevguard.contraindication_conflict", "jevguard.dose_and_rx"} <= {f.rule for f in d.fired}
+
+
+def test_self_harm_message_with_no_crisis_response_goes_to_a_person():
+    d = guard(make_response({"self_harm_in_query": 0.96, "urgent_care_advised": 0.03, "red_flag_in_query": 0.9}, scope="emergency")).check(
+        turn("Everyone has bad days, get some sleep.", "I feel hopeless and want to disappear."))
+    assert d.action is Action.ESCALATE and d.final_text == templates.ESCALATE_HOLD
+    assert "jevguard.self_harm_no_urgent" in {f.rule for f in d.fired}
+
+
+def test_self_harm_message_with_a_crisis_response_is_not_held():
+    d = guard(make_response({"self_harm_in_query": 0.96, "urgent_care_advised": 0.97, "red_flag_in_query": 0.9}, scope="emergency")).check(
+        turn("Please call a crisis line or emergency services now." + CITED, "I feel hopeless and want to disappear."))
+    assert d.action is Action.PASS
+
+
+def test_uncertain_self_harm_fails_closed():
+    d = guard(make_response({"self_harm_in_query": 0.30, "urgent_care_advised": 0.03})).check(turn())
+    assert d.action is Action.ESCALATE and "uncertain" in " ".join(d.reasons)
+
+
+def test_wait_and_see_for_a_non_emergency_is_left_alone():
+    d = guard(make_response(scope="symptom_triage")).check(
+        turn("It is reasonable to wait a few days and see how it goes." + CITED, "I twisted my ankle. I can walk on it."))
+    assert d.action is Action.PASS and d.final_text == d.original_text

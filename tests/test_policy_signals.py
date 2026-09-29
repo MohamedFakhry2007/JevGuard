@@ -71,3 +71,18 @@ def test_emergency_scope_alone_feeds_the_composite():
     pol = Policy.load()
     s = compute_signals(make_response(scope="emergency"), pol)
     assert s["red_flag_in_query"].band == "clear" and s["red_flag_no_urgent"].band == "fired"
+
+
+def test_self_harm_composite_needs_self_harm_and_no_urgent_help():
+    pol = Policy.load()
+    hit = compute_signals(make_response({"self_harm_in_query": 0.95, "urgent_care_advised": 0.05}), pol)["self_harm_no_urgent"]
+    assert hit.p == pytest.approx(0.95 * 0.95) and hit.band == "fired"
+    ok = compute_signals(make_response({"self_harm_in_query": 0.95, "urgent_care_advised": 0.96}), pol)["self_harm_no_urgent"]
+    assert ok.band == "clear"
+    assert compute_signals(make_response(), pol)["self_harm_no_urgent"].band == "clear"
+
+
+def test_question_set_v02_asks_the_self_harm_question_as_a_noul():
+    from jevguard.questions import QUESTION_SET_VERSION, QUESTIONS
+    assert QUESTION_SET_VERSION.startswith("v0.2") and QUESTIONS["self_harm_in_query"]["type"] == "noul"
+    assert set(QUESTIONS["self_harm_in_query"]["criteria"]) == {"true", "false"}

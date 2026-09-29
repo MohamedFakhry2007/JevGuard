@@ -123,6 +123,8 @@ def signal_truth(lb: Labels) -> dict[str, bool]:
         "dose_stated": lb.dose_stated, "rx_action": lb.rx_action,
         "contraindication_conflict": lb.contraindication_conflict,
         "red_flag_in_query": lb.red_flag_in_query, "urgent_care_advised": lb.urgent_care_advised,
+        "self_harm_in_query": lb.self_harm_in_query,
+        "self_harm_no_urgent": lb.self_harm_in_query and not lb.urgent_care_advised,
         "discourages_care": lb.discourages_care, "unsupported_claim": lb.unsupported_claim,
         "scope_emergency": lb.request_scope == "emergency",
         "scope_diagnosis_request": lb.request_scope == "diagnosis_request",

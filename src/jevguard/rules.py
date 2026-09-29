@@ -152,6 +152,8 @@ def default_rules() -> list[BaseRule]:
                        reason="Answer conflicts with the patient context"),
         SignalGateRule("discourages_care", Action.BLOCK, Action.ESCALATE,
                        reason="Answer discourages seeking care"),
+        SignalGateRule("self_harm_no_urgent", Action.ESCALATE, Action.ESCALATE,
+                       reason="Self-harm message without a crisis response, a person must engage"),
         DoseAndRxRule(),
         SignalGateRule("red_flag_no_urgent", Action.CORRECT, Action.ESCALATE, append="urgent_care",
                        reason="Emergency evidence without urgent-care advice"),

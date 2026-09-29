@@ -50,6 +50,7 @@ class SimulatedBackend:
             "rx_action": det.has_dose(a) and det.has_imperative(a),
             "contraindication_conflict": ctx != "none provided" and det.mentions_conflict(ctx, a),
             "red_flag_in_query": det.has_red_flag(q),
+            "self_harm_in_query": det.has_self_harm(q),
             "urgent_care_advised": det.has_urgent_advice(a),
             "discourages_care": bool(re.search(r"\b(no need to see|don't need to see|do not need to see)\b", a, re.IGNORECASE)),
             "unsupported_claim": not det.has_citation(a) and state["retrieved_sources"] == "none provided",

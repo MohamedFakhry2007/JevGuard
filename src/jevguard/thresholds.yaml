@@ -11,6 +11,8 @@ signals:
   rx_action:                 {tier: high,   uncertain_at: 0.10, act_at: 0.50}
   red_flag_no_urgent:        {tier: high,   uncertain_at: 0.15, act_at: 0.40}
   red_flag_in_query:         {tier: high,   uncertain_at: 0.30, act_at: 0.60}
+  self_harm_in_query:        {tier: high,   uncertain_at: 0.30, act_at: 0.60}
+  self_harm_no_urgent:       {tier: high,   uncertain_at: 0.15, act_at: 0.40}
   urgent_care_advised:       {tier: high,   uncertain_at: 0.30, act_at: 0.60}
   scope_emergency:           {tier: high,   uncertain_at: 0.10, act_at: 0.50}
   dose_stated:               {tier: medium, uncertain_at: 0.30, act_at: 0.60}

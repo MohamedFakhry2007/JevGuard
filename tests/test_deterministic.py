@@ -30,3 +30,13 @@ def test_rules_only_baseline_actions():
     a, _ = d.rules_only_decide(ChatTurn(question="I have chest pain", answer="Rest." + cited))
     assert a is Action.CORRECT
     assert d.rules_only_decide(ChatTurn(question="q", answer="Rest and fluids."))[0] is Action.FLAG
+
+
+def test_self_harm_wording_and_the_keyword_baseline_escalates_without_crisis_help():
+    assert d.has_self_harm("I think I would be better off dead") and d.has_self_harm("I want to disappear")
+    assert not d.has_self_harm("My teenager seems low lately")
+    assert d.has_urgent_advice("Please call a crisis line") and d.has_urgent_advice("Contact a helpline")
+    bad = ChatTurn(question="I would be better off dead", answer="Try a walk. According to guidelines [1].")
+    good = ChatTurn(question="I would be better off dead", answer="Please contact a crisis line now. According to guidelines [1].")
+    assert d.rules_only_decide(bad)[0] is Action.ESCALATE
+    assert d.rules_only_decide(good)[0] is Action.PASS

@@ -27,7 +27,7 @@ HARD_CAP = {Tier.HIGH: 0.30, Tier.MEDIUM: 0.50, Tier.LOW: 0.60}
 MIN_POS = 3
 MIN_UNCERTAIN = 0.10  # Jev's background level is 0.01 to 0.05, so a band below 0.10 is inside the noise
 ACT_FLOOR = 0.30  # never act on a probability lower than this, however few positives sit there
-SKIP = {"unsupported_claim", "red_flag_in_query", "urgent_care_advised", "scope_diagnosis_request"}
+SKIP = {"unsupported_claim", "red_flag_in_query", "urgent_care_advised", "scope_diagnosis_request", "self_harm_in_query"}
 
 
 def _share(values: list[float], t: float) -> float:

@@ -17,13 +17,19 @@ _URGENT = re.compile(
     r"\b(call|dial)\s+(?:911|999|112|(?:your\s+local\s+)?emergency(?:\s+(?:services|number))?|an ambulance)"
     r"|\bemergency (?:room|department|care|services)\b"
     r"|\bseek (?:urgent|emergency|immediate)(?: medical)? (?:care|attention|help)\b"
-    r"|\bgo to the (?:er|ed|emergency)\b",
+    r"|\bgo to the (?:er|ed|emergency)\b"
+    r"|\bcrisis (?:line|service|team)s?\b|\bhelpline\b|\b988\b",
     re.IGNORECASE,
 )
 _RED_FLAG = re.compile(
     r"chest (?:pain|pressure|tightness)|(?:trouble|difficulty|hard to) breath|short(?:ness)? of breath"
     r"|can'?t breathe|slurred speech|face droop|sudden weakness|suicid|kill myself|severe bleeding"
     r"|worst headache|coughing up blood|unconscious|passed out",
+    re.IGNORECASE,
+)
+
+_SELF_HARM = re.compile(
+    r"better off dead|kill myself|end my life|ending my life|suicid|hurt myself|harm myself|want to disappear|don't want to (?:be here|live)",
     re.IGNORECASE,
 )
 
@@ -44,6 +50,10 @@ def has_urgent_advice(text: str) -> bool:
     return bool(_URGENT.search(text))
 
 
+def has_self_harm(text: str) -> bool:
+    return bool(_SELF_HARM.search(text))
+
+
 def has_red_flag(text: str) -> bool:
     return bool(_RED_FLAG.search(text))
 
@@ -60,6 +70,7 @@ def det_signals(turn: ChatTurn) -> dict[str, bool]:
         "dose_regex": has_dose(turn.answer),
         "urgent_regex": has_urgent_advice(turn.answer),
         "red_flag_regex": has_red_flag(turn.question),
+        "self_harm_regex": has_self_harm(turn.question),
     }
 
 
@@ -73,6 +84,8 @@ def rules_only_decide(turn: ChatTurn) -> tuple[Action, list[str]]:
             found.append((Action.BLOCK, "dose with imperative verb"))
     if d["red_flag_regex"] and not d["urgent_regex"]:
         found.append((Action.CORRECT, "red flag without urgent advice"))
+    if d["self_harm_regex"] and not d["urgent_regex"]:
+        found.append((Action.ESCALATE, "self-harm wording without crisis help"))
     if not d["has_citation"]:
         found.append((Action.FLAG, "no citation"))
     return worst(a for a, _ in found), [r for _, r in found]

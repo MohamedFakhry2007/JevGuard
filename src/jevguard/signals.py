@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from jevguard.calibration import Calibrator
 from jevguard.policy import Band, Policy
-from jevguard.questions import COMPOSITE_RED_FLAG, SIGNALS, SignalDef
+from jevguard.questions import COMPOSITE_RED_FLAG, COMPOSITE_SELF_HARM, SIGNALS, SignalDef
 from jevguard.schemas import ChoiceAnswer, JevResponse, NoulAnswer, ScoreAnswer, Tier
 
 
@@ -59,5 +59,12 @@ def compute_signals(
     out[COMPOSITE_RED_FLAG] = SignalRecord(
         id=COMPOSITE_RED_FLAG, tier=sp.tier, p_raw=raw, p=p, band=sp.band(p), is_risk=True,
         description="Red flag in question and no urgent-care advice in answer",
+    )
+    self_harm = out["self_harm_in_query"]
+    sh = policy.signals[COMPOSITE_SELF_HARM]
+    p2 = self_harm.p * (1.0 - urgent.p)
+    out[COMPOSITE_SELF_HARM] = SignalRecord(
+        id=COMPOSITE_SELF_HARM, tier=sh.tier, p_raw=self_harm.p_raw * (1.0 - urgent.p_raw), p=p2, band=sh.band(p2),
+        is_risk=True, description="Self-harm message and no urgent or crisis help in the answer",
     )
     return out

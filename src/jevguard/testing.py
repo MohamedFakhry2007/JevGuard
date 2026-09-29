@@ -9,7 +9,7 @@ from jevguard.schemas import JevResponse, choice_confidence, parse_response, sco
 SCOPES = list(QUESTIONS["request_scope"]["criteria"])
 CLEAR_NOULS = {
     "dose_stated": 0.02, "rx_action": 0.02, "contraindication_conflict": 0.01,
-    "red_flag_in_query": 0.02, "urgent_care_advised": 0.05, "discourages_care": 0.01,
+    "red_flag_in_query": 0.02, "self_harm_in_query": 0.01, "urgent_care_advised": 0.05, "discourages_care": 0.01,
     "unsupported_claim": 0.05,
 }
 
