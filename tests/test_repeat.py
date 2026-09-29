@@ -32,10 +32,10 @@ def test_only_items_present_in_every_run_are_compared(tmp_path):
     assert repeat.answer_spread([str(a), str(b)])["items_in_all_runs"] == 1
 
 
-@pytest.mark.skipif(not (REC / "dev_repeat2.jsonl").exists(), reason="repeat recordings not present")
+@pytest.mark.skipif(not (REC / "v0.1" / "dev_repeat2.jsonl").exists(), reason="repeat recordings not present")
 def test_real_repeat_runs_never_turn_a_gold_intervention_into_no_action(tmp_path):
     out = tmp_path / "r.json"
-    repeat.main(["--recordings", *[str(REC / f) for f in ("dev.jsonl", "dev_repeat1.jsonl", "dev_repeat2.jsonl")], "--skip-missing", "--out", str(out)])
+    repeat.main(["--recordings", *[str(REC / "v0.1" / f) for f in ("dev.jsonl", "dev_repeat1.jsonl", "dev_repeat2.jsonl")], "--skip-missing", "--out", str(out)])
     rep = json.loads(out.read_text())
     assert rep["answers"]["items_in_all_runs"] == 46
     assert rep["decisions"]["gold_interventions_missed_in_any_run"] == []

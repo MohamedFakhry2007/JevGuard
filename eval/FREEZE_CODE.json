@@ -1,0 +1,17 @@
+{
+  "note": "Supplementary, added after the test half was scored, in response to review. FREEZE.json covers thresholds, question wording and test labels only. Since the freeze commit 454346f the decision code changed in two places: engine.py (fail closed on any unexpected error in signal computation; a warning when no policy is given) and schemas.py (reject malformed probabilities). Neither changes any decision on the recorded answers: `python -m jevguard.evalset.posthoc` re-derives the committed test rows exactly.",
+  "digests": {
+    "questions.py": "e2f93adc11a4e1f8ff14992bd977ef21109dc8282e9987c26e7172767541b77c",
+    "thresholds.yaml": "eac62d43b51e5dc0361eba5b54727d40fa182fabf1265c4384d1b31f0cdc2db3",
+    "policy.py": "696b935195fe126e2bc404eb30b1926f58c43c769b2689befe9a0361550ce97d",
+    "signals.py": "17e200591740d65b7880c8850e306fcf12254ee7e88b3db7c949d0233631f460",
+    "rules.py": "1abd34af8cd3b424a42860ea6c6e04e20f921239eb5bb7a28674f2dd88646e0e",
+    "engine.py": "f196c4c83e68dae2ba8f45195cf859f2a14b63efc75c2af5ca88dd898af276fc",
+    "templates.py": "17c0d8a3310661741fe1844d16313a2611615ae7d590847035ac2bca679e5396",
+    "deterministic.py": "3037c7bd66eb458a839b0976627489d1b1802bd6e2d668f214a0764c24bae16b",
+    "schemas.py": "895e8593ae30109f050d10192b239a65b0ce02ffe0ff833f573fff8a4ef2691c",
+    "evalset/gold.py": "7496ff446f43031c0e0abf68ced57fcf1622df796453f56181bdb01e483d6cf7",
+    "evalset/systems.py": "eef3304aefa933cd86385b3dbbed1b3f9c9a0d31f204030c4e25c4937f1e6b85",
+    "evalset/ablate.py": "3b9c20d4e300c3b320f2f2c04a83c98a881d472777c62bc76a0f362616b9697c"
+  }
+}

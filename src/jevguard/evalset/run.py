@@ -59,7 +59,7 @@ def build_report(system: System, items: list[EvalItem], results: list[ItemResult
         report["signals_calibrated"] = signal_report(results, by_id, "p")
     if meta.get("backend") == "simulated":
         report["WARNING"] = "SIMULATED BACKEND, NOT JEV. These numbers say nothing about Jev. Do not report."
-    if any(i.review_status != "reviewed" for i in items):
+    if any(i.review_status == "draft_unreviewed" for i in items):
         report["NOTICE"] = "Labels are unreviewed drafts."
     report["results"] = [r.model_dump(mode="json") for r in results]
     return report

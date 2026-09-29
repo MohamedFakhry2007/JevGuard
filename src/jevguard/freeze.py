@@ -65,6 +65,17 @@ def create(candidate: Path) -> dict[str, Any]:
     return man
 
 
+CODE_MANIFEST = REPO / "eval" / "FREEZE_CODE.json"
+DECISION_FILES = ("questions.py", "thresholds.yaml", "policy.py", "signals.py", "rules.py", "engine.py", "templates.py",
+                  "deterministic.py", "schemas.py", "evalset/gold.py", "evalset/systems.py", "evalset/ablate.py")
+
+
+def code_digests() -> dict[str, str]:
+    """Hashes of the files that decide an action. Supplementary: added after review, so it records the code as of
+    that date rather than at the freeze commit (see the note written into the manifest)."""
+    return {f: _sha((REPO / "src" / "jevguard" / f).read_bytes()) for f in DECISION_FILES}
+
+
 def load_manifest() -> dict[str, Any]:
     if not MANIFEST.exists():
         raise FreezeError("no freeze manifest: thresholds have not been frozen")
@@ -96,8 +107,25 @@ def main(argv: list[str] | None = None) -> None:
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--create", metavar="CANDIDATE_POLICY")
     g.add_argument("--check", action="store_true")
+    g.add_argument("--write-code-digests", action="store_true", help="supplementary; see eval/FREEZE_CODE.json")
+    g.add_argument("--check-code", action="store_true")
     a = ap.parse_args(argv)
-    if a.create:
+    if a.write_code_digests:
+        CODE_MANIFEST.write_text(json.dumps({
+            "note": ("Supplementary, added after the test half was scored, in response to review. FREEZE.json covers thresholds, "
+                     "question wording and test labels only. Since the freeze commit 454346f the decision code changed in two "
+                     "places: engine.py (fail closed on any unexpected error in signal computation; a warning when no policy "
+                     "is given) and schemas.py (reject malformed probabilities). Neither changes any decision on the recorded "
+                     "answers: `python -m jevguard.evalset.posthoc` re-derives the committed test rows exactly."),
+            "digests": code_digests()}, indent=2) + "\n")
+        print("written", CODE_MANIFEST)
+    elif a.check_code:
+        now, then = code_digests(), json.loads(CODE_MANIFEST.read_text())["digests"]
+        changed = sorted(k for k in now if now[k] != then.get(k))
+        if changed:
+            raise SystemExit(f"decision code changed since FREEZE_CODE.json: {changed}")
+        print("decision code matches FREEZE_CODE.json")
+    elif a.create:
         man = create(Path(a.create))
         print(f"frozen: policy {man['policy_digest']}, questions {man['question_set_version']} {man['questions_sha256'][:12]}")
     else:

@@ -9,8 +9,10 @@
     "policy_digest": "b29ebae75cb8",
     "frozen_at": "2026-09-29T10:13:22.712410+00:00",
     "run_number": 1,
-    "clinician_reviewed_test_items": 5,
-    "test_labels_changed_since_freeze": []
+    "clinician_reviewed_test_items": 0,
+    "test_labels_changed_since_freeze": [],
+    "rule_applied_test_items": 5,
+    "metadata_corrected_after_review": "Originally counted the 5 rule-applied items as clinician-reviewed. No scores changed."
   },
   "rows": [
     {
@@ -642,7 +644,7 @@
   },
   "caveats": [
     "All data is synthetic.",
-    "5 of 82 test labels have a clinician verdict; the rest are drafts written by the developer.",
+    "0 of 82 test labels were shown to the clinician; 5 follow a clinician rule applied by the author, the rest are drafts written by the developer.",
     "Thresholds were fit on the dev split only, then frozen before this run.",
     "One reviewer, one model version, small sample: intervals are wide."
   ]

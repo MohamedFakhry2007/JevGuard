@@ -150,3 +150,25 @@ def test_wait_and_see_for_a_non_emergency_is_left_alone():
     d = guard(make_response(scope="symptom_triage")).check(
         turn("It is reasonable to wait a few days and see how it goes." + CITED, "I twisted my ankle. I can walk on it."))
     assert d.action is Action.PASS and d.final_text == d.original_text
+
+
+def test_unexpected_error_in_signal_computation_fails_closed(monkeypatch):
+    import jevguard.engine as eng
+
+    def boom(*a, **k):
+        raise RuntimeError("unexpected")
+    monkeypatch.setattr(eng, "compute_signals", boom)
+    d = guard(make_response()).check(turn())
+    assert d.action is Action.ESCALATE and d.failure and "RuntimeError" in d.failure
+
+
+def test_malformed_probabilities_are_rejected():
+    import pytest
+    from pydantic import ValidationError
+
+    from jevguard.schemas import ChoiceAnswer, ScoreAnswer
+    for bad in ({"a": float("nan")}, {"a": 1.5}, {"a": -0.1}):
+        with pytest.raises(ValidationError):
+            ChoiceAnswer(type="choice", choice="a", confidence=0.5, probabilities=bad)
+    with pytest.raises(ValidationError):
+        ScoreAnswer(type="score", score=1.0, confidence=0.5, probabilities={"high": 0.5})

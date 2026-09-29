@@ -3,11 +3,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from collections.abc import Iterable
 from enum import Enum
 from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class Action(str, Enum):
@@ -73,12 +74,22 @@ class NoulAnswer(BaseModel):
     noul: float = Field(ge=0.0, le=1.0)
 
 
+def _check_probabilities(probs: dict[str, float]) -> dict[str, float]:
+    """Malformed probabilities must be rejected here, or a NaN or out-of-range value could compare as 'clear'."""
+    for k, v in probs.items():
+        if not math.isfinite(v) or not 0.0 <= v <= 1.0:
+            raise ValueError(f"probability for {k!r} must be a finite number in [0, 1], got {v!r}")
+    return probs
+
+
 class ChoiceAnswer(BaseModel):
     model_config = ConfigDict(extra="ignore")
     type: Literal["choice"]
     choice: str
     confidence: float = Field(ge=0.0, le=1.0)
     probabilities: dict[str, float]
+
+    _valid = field_validator("probabilities")(_check_probabilities)
 
 
 class ScoreAnswer(BaseModel):
@@ -88,6 +99,15 @@ class ScoreAnswer(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     probabilities: dict[str, float]
     legend: dict[str, str] = Field(default_factory=dict)
+
+    _valid = field_validator("probabilities")(_check_probabilities)
+
+    @field_validator("probabilities")
+    @classmethod
+    def _integer_keys(cls, v: dict[str, float]) -> dict[str, float]:
+        for k in v:
+            int(k)  # a non-integer score key is a malformed response
+        return v
 
 
 Answer = Annotated[NoulAnswer | ChoiceAnswer | ScoreAnswer, Field(discriminator="type")]

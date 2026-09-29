@@ -7,6 +7,7 @@ from jevguard import ui_model as ui
 from jevguard.schemas import Action, ChatTurn
 
 st.set_page_config(page_title="JevGuard", layout="wide")
+MAX_CHARS = 4000  # keeps a pasted document from becoming a very large paid request in live mode
 
 COLORS = {
     Action.PASS: ("#157347", "rgba(21,115,71,0.14)"), Action.FLAG: ("#a06800", "rgba(200,140,0,0.16)"),
@@ -24,6 +25,7 @@ def pill(action: Action, big: bool = False) -> str:
 
 
 st.title("JevGuard")
+st.warning("Every example here is a synthetic test case. Many are deliberately unsafe fixtures written to exercise the checks. None of it is medical advice.")
 st.caption("A second check on every answer a medical chatbot writes, before the patient reads it. "
            "Jev answers ten narrow questions in about 0.3 s. Plain rules decide. Research demo, not a medical device. All data is synthetic.")
 
@@ -60,10 +62,10 @@ st.selectbox("Start from a saved example", choices, key="example", on_change=pic
 
 left, right = st.columns([1, 1])
 with left:
-    st.text_area("Patient's question", key="q", height=90)
-    st.text_area("Patient record (allergies, conditions, medicines)", key="ctx", height=70)
-    st.text_area("Sources the chatbot was given (one per line)", key="src", height=70)
-    st.text_area("Chatbot's answer", key="ans", height=140)
+    st.text_area("Patient's question", key="q", height=90, max_chars=MAX_CHARS)
+    st.text_area("Patient record (allergies, conditions, medicines)", key="ctx", height=70, max_chars=MAX_CHARS)
+    st.text_area("Sources the chatbot was given (one per line)", key="src", height=70, max_chars=MAX_CHARS)
+    st.text_area("Chatbot's answer", key="ans", height=140, max_chars=MAX_CHARS)
 
 turn = ChatTurn(question=st.session_state.q, answer=st.session_state.ans, context=st.session_state.ctx,
                 sources=[s for s in st.session_state.src.splitlines() if s.strip()])
@@ -87,7 +89,7 @@ with right:
         st.error(f"Jev could not be reached or returned something incomplete ({d.failure}). The guard failed closed.")
     gold = by_id.get(st.session_state.get("example"))
     if gold and gold.question == turn.question and gold.answer == turn.answer:
-        who = "clinician-reviewed" if gold.review_status == "reviewed" else "draft label, not yet reviewed"
+        who = {"reviewed": "clinician-reviewed", "rule_applied": "author applied a clinician rule"}.get(gold.review_status, "draft label, not yet reviewed")
         st.caption(f"Expected action for this saved example: **{gold.expected_action.value}** ({who}).")
     st.markdown("**What the patient would read**")
     if d.final_text != d.original_text:
@@ -103,12 +105,11 @@ with right:
 
 st.subheader("What Jev said, check by check")
 st.dataframe(
-    [{"Check": r.label, "Risk": r.tier, "Jev says": round(r.p_raw, 2), "After calibration": round(r.p, 2), "Band": r.band,
+    [{"Check": r.label, "Risk": r.tier, "Jev says": round(r.p_raw, 2), "Band": r.band,
       "Counts toward decision": "yes" if r.is_risk else "combined with another"} for r in view.rows],
-    column_config={"Jev says": st.column_config.ProgressColumn("Jev says", min_value=0.0, max_value=1.0, format="%.2f"),
-                   "After calibration": st.column_config.ProgressColumn("After calibration", min_value=0.0, max_value=1.0, format="%.2f")},
+    column_config={"Jev says": st.column_config.ProgressColumn("Jev says", min_value=0.0, max_value=1.0, format="%.2f")},
     hide_index=True, width="stretch")
-st.caption("Band: clear, unsure (high-risk checks escalate here) or fired. The two emergency checks and the two self-harm checks are combined into one signal each.")
+st.caption("Band: clear, unsure (high-risk checks escalate here) or fired. The emergency checks (three questions) and the self-harm checks (two) are each combined into one signal.")
 
 c1, c2, c3 = st.columns(3)
 c1.metric("Jev time", f"{d.jev_latency_ms:.0f} ms" if d.jev_latency_ms else "n/a")

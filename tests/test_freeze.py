@@ -105,3 +105,8 @@ def test_scoring_refuses_an_incomplete_recording(tmp_path, monkeypatch):
     with pytest.raises(ReplayMiss):
         final.main(["--recording", str(rec), "--allow-test", "--allow-simulated", "--items", ITEMS, "--out", str(tmp_path / "x.json")])
     assert not (tmp_path / "x.json").exists()
+
+
+def test_supplementary_code_digests_match_the_decision_files():
+    from jevguard import freeze
+    assert json.loads(freeze.CODE_MANIFEST.read_text())["digests"] == freeze.code_digests()

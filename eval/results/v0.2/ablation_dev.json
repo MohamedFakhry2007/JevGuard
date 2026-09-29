@@ -111,6 +111,61 @@
       "cost_per_1k_checks_usd": 0.050651
     },
     {
+      "system": "same rule pack, one 0.5 cutoff, no unsure band (post-hoc)",
+      "n": 48,
+      "intervention_recall": {
+        "k": 21,
+        "n": 22,
+        "rate": 0.9545454545454546,
+        "ci95": [
+          0.782,
+          0.992
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 2,
+        "n": 26,
+        "rate": 0.07692307692307693,
+        "ci95": [
+          0.021,
+          0.241
+        ]
+      },
+      "exact_action_match": {
+        "k": 40,
+        "n": 48,
+        "rate": 0.8333333333333334,
+        "ci95": [
+          0.704,
+          0.913
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 0,
+        "n": 26,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.129
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 2,
+        "n": 22,
+        "rate": 0.09090909090909091,
+        "ci95": [
+          0.025,
+          0.278
+        ]
+      },
+      "latency_ms": {
+        "p50": 291.2567079999988,
+        "p95": 343.7548570000004,
+        "p99": 431.69955799999826
+      },
+      "cost_per_1k_checks_usd": 0.050651
+    },
+    {
       "system": "jev_vlmguard (provisional thresholds)",
       "n": 48,
       "intervention_recall": {

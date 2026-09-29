@@ -66,16 +66,17 @@ def main(argv: list[str] | None = None) -> None:
         "jev_vlmguard_frozen": evaluate(JevRulesSystem(JevGuard(ReplayBackend(a.recording), policy)), items),  # strict: a gap raises
     }
     reviewed = sum(i.review_status == "reviewed" for i in items)
+    rule_applied = sum(i.review_status == "rule_applied" for i in items)
     report: dict[str, Any] = {
         "meta": {"scored_at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "n": len(items), "models": sorted(models),
                  "question_set": man["question_set_version"], "policy_digest": policy.digest, "frozen_at": man["frozen_at"],
-                 "run_number": previous + 1, "clinician_reviewed_test_items": reviewed,
+                 "run_number": previous + 1, "clinician_reviewed_test_items": reviewed, "rule_applied_test_items": rule_applied,
                  "test_labels_changed_since_freeze": changed_test_labels(man)},
         "rows": [row(k, v) for k, v in systems.items()],
         "frozen_system_detail": summarize(systems["jev_vlmguard_frozen"]),
         "caveats": [
             "All data is synthetic.",
-            f"{reviewed} of {len(items)} test labels have a clinician verdict; the rest are drafts written by the developer.",
+            f"{reviewed} of {len(items)} test labels have a clinician verdict, {rule_applied} follow a clinician rule applied by the author, the rest are drafts written by the developer.",
             "Thresholds were fit on the dev split only, then frozen before this run.",
             "One reviewer, one model version, small sample: intervals are wide.",
         ],

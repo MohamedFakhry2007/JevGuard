@@ -22,10 +22,10 @@ def test_only_dev_examples_with_a_recording_are_offered():
 @needs_rec
 def test_recorded_mode_gives_the_same_decision_as_the_engine_for_a_saved_example():
     e = next(i for i in ui.recorded_examples() if i.id == "s28-contraindication")
-    v = ui.run(e.to_turn(), "recorded", "Tuned on the dev split (candidate)")
+    v = ui.run(e.to_turn(), "recorded", next(iter(ui.POLICIES)))
     assert v.decision.action is Action.BLOCK and v.rows[0].id == "contraindication_conflict"
     assert v.keyword_action in Action and v.warning is None
-    strict = ui.run(e.to_turn(), "recorded", next(iter(ui.POLICIES)))
+    strict = ui.run(e.to_turn(), "recorded", next(k for k in ui.POLICIES if k.startswith("Starting")))
     assert strict.decision.action is Action.ESCALATE  # Jev is 40% sure: the unsure band holds it
 
 

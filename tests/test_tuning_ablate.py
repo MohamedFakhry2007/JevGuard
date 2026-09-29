@@ -79,9 +79,12 @@ def test_ablation_runs_on_the_real_recording_and_every_system_scores_the_same_it
     out = tmp_path / "ab.json"
     ablate.main(["--recording", str(REC), "--out", str(out), "--policy-out", str(tmp_path / "p.yaml")])
     rep = json.loads(out.read_text())
-    assert rep["rows"][0]["system"] == "rules_only" and len(rep["rows"]) == 5
+    assert rep["rows"][0]["system"] == "rules_only" and len(rep["rows"]) == 6
     assert len({r["n"] for r in rep["rows"]}) == 1
     assert Policy.load(tmp_path / "p.yaml").signals["discourages_care"].uncertain_at >= MIN_UNCERTAIN
+    # re-running the documented command re-derives the policy that was frozen
+    frozen = Path(__file__).resolve().parents[1] / "eval" / "policies" / "FROZEN_v0.2.yaml"
+    assert Policy.load(tmp_path / "p.yaml").digest == Policy.load(frozen).digest
 
 
 @pytest.mark.skipif(not REC.exists(), reason="dev recording not present")

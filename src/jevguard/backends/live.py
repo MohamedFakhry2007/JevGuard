@@ -29,6 +29,7 @@ class LiveBackend:
                 raise ImportError("install the live extra: pip install 'jevguard[live]'") from exc
             client = TypeSafeClient(
                 model=model,
+                timeout=timeout,
                 retry=RetryPolicy(max_retries=max_retries, timeout=timeout),
                 **client_kwargs,
             )

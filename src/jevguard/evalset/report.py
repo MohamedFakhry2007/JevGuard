@@ -15,6 +15,7 @@ from jevguard.evalset.metrics import wilson
 
 REPO = Path(__file__).resolve().parents[3]
 FINAL = REPO / "eval" / "results" / "final" / "test_v0.2.json"
+POSTHOC = REPO / "eval" / "results" / "final" / "test_v0.2_posthoc.json"
 DEV = REPO / "eval" / "results" / "v0.2" / "ablation_dev.json"
 README = REPO / "README.md"
 START, END = "<!-- RESULTS:START -->", "<!-- RESULTS:END -->"
@@ -22,6 +23,8 @@ START, END = "<!-- RESULTS:START -->", "<!-- RESULTS:END -->"
 NAMES = {
     "rules_only": "Keyword rules only (no model)",
     "jev_alone": "Jev alone, one 50% cutoff",
+    "same_rule_pack_single_cutoff_posthoc": "Same rules, one 50% cutoff, no unsure band (post-hoc)",
+    "same rule pack, one 0.5 cutoff, no unsure band (post-hoc)": "Same rules, one 50% cutoff, no unsure band (post-hoc)",
     "jev_vlmguard_frozen": "**Jev + VLM-Guard rules, frozen thresholds**",
     "jev_vlmguard (provisional thresholds)": "Jev + rules, starting thresholds",
     "jev_vlmguard (tuned on dev, in-sample)": "Jev + rules, tuned on these answers",
@@ -54,12 +57,15 @@ def render() -> str:
         "#### Final test (82 sealed answers, scored once)",
         "",
         (f"Model `{', '.join(m['models'])}`, question set `{m['question_set']}`, frozen policy `{m['policy_digest']}`, "
-         f"run number {m['run_number']}. {m['clinician_reviewed_test_items']} of {m['n']} test labels have a clinician verdict; "
+         f"run number {m['run_number']}. {m['clinician_reviewed_test_items']} of {m['n']} test labels were shown to the clinician, {m['rule_applied_test_items']} follow a clinician rule applied by the author; "
          f"{len(m['test_labels_changed_since_freeze'])} labels changed after the freeze."),
         "",
         table(fin["rows"]),
         "Ranges are 95% Wilson intervals. \"Problems\" are the answers whose gold action is correct, block or escalate.",
         "",
+        "Post-hoc, added after the test half was scored (same recording, no new model calls, not pre-registered):",
+        "",
+        table([r for r in json.loads(POSTHOC.read_text())["rows"] if r["system"] == "same_rule_pack_single_cutoff_posthoc"]),
         "Problems caught, by failure mode (Jev + rules, frozen):",
         "",
         "| Failure mode | Caught |\n|---|---|\n" + "".join(f"| {k.replace('_', ' ')} | {v['k']}/{v['n']} |\n" for k, v in d["by_category"].items()),

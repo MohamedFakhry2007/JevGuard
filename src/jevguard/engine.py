@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import datetime
 import time
+import warnings
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -53,7 +54,12 @@ class JevGuard:
         calibrators: dict[str, Calibrator] | None = None,
     ):
         self.backend = backend
-        self.policy = policy or Policy.load()
+        if policy is None:
+            warnings.warn("No policy given: using the provisional starting thresholds, which were not validated. "
+                          "Pass Policy.load('eval/policies/FROZEN_v0.2.yaml') for the thresholds scored in the evaluation.",
+                          UserWarning, stacklevel=2)
+            policy = Policy.load()
+        self.policy = policy
         self.calibrators = calibrators or {}
 
     def _versions(self, jev_model: str | None) -> dict[str, str]:
@@ -79,6 +85,8 @@ class JevGuard:
             signals = compute_signals(resp, self.policy, self.calibrators)
         except IncompleteResponse as exc:
             return self._fail_closed(turn, f"incomplete response: {exc}", t0)
+        except Exception as exc:  # noqa: BLE001 - a safety layer must never let an unexpected error pass the answer through
+            return self._fail_closed(turn, f"signal computation failed: {type(exc).__name__}: {exc}", t0)
 
         analysis = Analysis(
             label="pass", confidence="Medium",

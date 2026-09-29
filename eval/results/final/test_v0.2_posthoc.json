@@ -1,0 +1,230 @@
+{
+  "meta": {
+    "note": "POST-HOC and exploratory. Not part of the pre-registered comparison.",
+    "at": "2026-09-29T10:49:30.498981+00:00",
+    "policy_digest": "b29ebae75cb8",
+    "n": 82
+  },
+  "rows": [
+    {
+      "system": "rules_only",
+      "n": 82,
+      "intervention_recall": {
+        "k": 8,
+        "n": 38,
+        "rate": 0.21052631578947367,
+        "ci95": [
+          0.111,
+          0.363
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 4,
+        "n": 44,
+        "rate": 0.09090909090909091,
+        "ci95": [
+          0.036,
+          0.212
+        ]
+      },
+      "exact_action_match": {
+        "k": 39,
+        "n": 82,
+        "rate": 0.47560975609756095,
+        "ci95": [
+          0.371,
+          0.582
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 0,
+        "n": 44,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.08
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 31,
+        "n": 38,
+        "rate": 0.8157894736842105,
+        "ci95": [
+          0.666,
+          0.908
+        ]
+      },
+      "latency_ms": {
+        "p50": null,
+        "p95": null,
+        "p99": null
+      },
+      "cost_per_1k_checks_usd": 0.0
+    },
+    {
+      "system": "jev_alone",
+      "n": 82,
+      "intervention_recall": {
+        "k": 36,
+        "n": 38,
+        "rate": 0.9473684210526315,
+        "ci95": [
+          0.827,
+          0.985
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 2,
+        "n": 44,
+        "rate": 0.045454545454545456,
+        "ci95": [
+          0.013,
+          0.151
+        ]
+      },
+      "exact_action_match": {
+        "k": 60,
+        "n": 82,
+        "rate": 0.7317073170731707,
+        "ci95": [
+          0.627,
+          0.816
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 0,
+        "n": 44,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.08
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 11,
+        "n": 38,
+        "rate": 0.2894736842105263,
+        "ci95": [
+          0.17,
+          0.448
+        ]
+      },
+      "latency_ms": {
+        "p50": 282.1732499999996,
+        "p95": 326.7448679999987,
+        "p99": 406.9081439999991
+      },
+      "cost_per_1k_checks_usd": 0.050943
+    },
+    {
+      "system": "jev_vlmguard_frozen",
+      "n": 82,
+      "intervention_recall": {
+        "k": 38,
+        "n": 38,
+        "rate": 1.0,
+        "ci95": [
+          0.908,
+          1.0
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 6,
+        "n": 44,
+        "rate": 0.13636363636363635,
+        "ci95": [
+          0.064,
+          0.267
+        ]
+      },
+      "exact_action_match": {
+        "k": 65,
+        "n": 82,
+        "rate": 0.7926829268292683,
+        "ci95": [
+          0.693,
+          0.866
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 3,
+        "n": 44,
+        "rate": 0.06818181818181818,
+        "ci95": [
+          0.023,
+          0.182
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 0,
+        "n": 38,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.092
+        ]
+      },
+      "latency_ms": {
+        "p50": 282.1732499999996,
+        "p95": 326.7448679999987,
+        "p99": 406.9081439999991
+      },
+      "cost_per_1k_checks_usd": 0.050943
+    },
+    {
+      "system": "same_rule_pack_single_cutoff_posthoc",
+      "n": 82,
+      "intervention_recall": {
+        "k": 38,
+        "n": 38,
+        "rate": 1.0,
+        "ci95": [
+          0.908,
+          1.0
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 10,
+        "n": 44,
+        "rate": 0.22727272727272727,
+        "ci95": [
+          0.128,
+          0.37
+        ]
+      },
+      "exact_action_match": {
+        "k": 64,
+        "n": 82,
+        "rate": 0.7804878048780488,
+        "ci95": [
+          0.679,
+          0.856
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 0,
+        "n": 44,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.08
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 1,
+        "n": 38,
+        "rate": 0.02631578947368421,
+        "ci95": [
+          0.005,
+          0.135
+        ]
+      },
+      "latency_ms": {
+        "p50": 282.1732499999996,
+        "p95": 326.7448679999987,
+        "p99": 406.9081439999991
+      },
+      "cost_per_1k_checks_usd": 0.050943
+    }
+  ]
+}

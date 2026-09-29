@@ -11,12 +11,10 @@ from __future__ import annotations
 import argparse
 import json
 import time
-from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
 from jevguard.backends import ReplayBackend
-from jevguard.calibration import Calibrator
 from jevguard.engine import JevGuard
 from jevguard.evalset.build import load
 from jevguard.evalset.metrics import ItemResult, rate, summarize
@@ -54,6 +52,13 @@ class JevAloneSystem:
             input_tokens=resp.usage.input_tokens,
             signals={k: {"p_raw": s.p_raw, "p": s.p} for k, s in sig.items()},
         )
+
+
+def single_cutoff_policy(base: Policy, cutoff: float = NAIVE_CUTOFF) -> Policy:
+    """The full rule pack with the naive design: every check acts at one cutoff and has no unsure band, so
+    nothing fails closed on uncertainty. Isolates what the risk-scaled bands add (post-hoc baseline)."""
+    return base.model_copy(update={"signals": {
+        k: v.model_copy(update={"uncertain_at": cutoff, "act_at": cutoff}) for k, v in base.signals.items()}})
 
 
 def exact_match(rs: list[ItemResult]) -> dict[str, Any]:
@@ -94,8 +99,8 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--items", default="eval/data/items.jsonl")
     ap.add_argument("--split", choices=["dev"], default="dev", help="test needs a frozen policy; use run.py")
     ap.add_argument("--skip-missing", action="store_true", help="score only items present in the recording, and list the rest")
-    ap.add_argument("--out", default="eval/results/ablation_dev.json")
-    ap.add_argument("--policy-out", default="eval/policies/dev_tuned_candidate.yaml")
+    ap.add_argument("--out", default="eval/results/v0.2/ablation_dev.json")
+    ap.add_argument("--policy-out", default="eval/policies/v0.2_dev_candidate.yaml")
     args = ap.parse_args(argv)
 
     items = [i for i in load(args.items) if i.split == "dev"]
@@ -111,6 +116,8 @@ def main(argv: list[str] | None = None) -> None:
     systems = {
         "rules_only": evaluate(RulesOnlySystem(), items),
         "jev_alone": evaluate(JevAloneSystem(ReplayBackend(rec)), items),
+        "same rule pack, one 0.5 cutoff, no unsure band (post-hoc)": evaluate(
+            JevRulesSystem(JevGuard(ReplayBackend(rec), single_cutoff_policy(base))), items),
         "jev_vlmguard (provisional thresholds)": raw,
         "jev_vlmguard (tuned on dev, in-sample)": evaluate(JevRulesSystem(JevGuard(ReplayBackend(rec), tuned)), items),
         "jev_vlmguard (tuned, leave-one-scenario-out)": cross_validated(items, rec, base, raw),
@@ -133,7 +140,6 @@ def main(argv: list[str] | None = None) -> None:
         print(f"  exact right action         {f(r['exact_action_match'])}")
         print(f"  clean items held           {f(r['held_for_clinician_on_clean_items'])}")
         print(f"  latency ms p50/p95         {r['latency_ms']['p50']} / {r['latency_ms']['p95']}   cost per 1k checks ${r['cost_per_1k_checks_usd']}")
-    _ = (defaultdict, Calibrator)
 
 
 if __name__ == "__main__":

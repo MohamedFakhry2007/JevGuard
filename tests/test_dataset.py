@@ -55,7 +55,7 @@ def test_ids_unique_and_every_mutation_known():
 
 def test_everything_is_labeled_synthetic_and_nothing_is_marked_reviewed_without_a_verdict():
     for i in build_items():
-        assert i.synthetic and i.review_status in ("draft_unreviewed", "reviewed")
+        assert i.synthetic and i.review_status in ("draft_unreviewed", "reviewed", "rule_applied")
 
 
 def test_no_scenario_straddles_dev_and_test():
@@ -119,7 +119,8 @@ def test_clinician_reviewed_items_carry_a_verdict_and_only_they_are_marked_revie
     items = {i.id: i for i in build_items()}
     assert set(REVIEW) <= set(items)
     for iid, it in items.items():
-        assert (it.review_status == "reviewed") == (iid in REVIEW)
+        assert (it.review_status != "draft_unreviewed") == (iid in REVIEW)
+        assert (it.review_status == "rule_applied") == (REVIEW.get(iid, {}).get("status") == "rule_applied")
         assert bool(it.clinician_verdict) == (iid in REVIEW)
 
 

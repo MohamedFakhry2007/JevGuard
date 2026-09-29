@@ -18,8 +18,8 @@ REPO = Path(__file__).resolve().parents[2]
 RECORDING = REPO / "eval" / "recordings" / "dev.jsonl"
 ITEMS = REPO / "eval" / "data" / "items.jsonl"
 POLICIES: dict[str, Path | None] = {
-    "Starting thresholds (a first guess)": None,
-    "Tuned on the dev split (candidate)": REPO / "eval" / "policies" / "v0.2_dev_candidate.yaml",
+    "Frozen thresholds (the ones scored on the test half)": REPO / "eval" / "policies" / "FROZEN_v0.2.yaml",
+    "Starting thresholds (a first guess, for comparison)": None,
 }
 MODES = {
     "recorded": "Recorded real Jev answers",

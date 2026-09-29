@@ -24,7 +24,7 @@ into one of: pass, flag, correct, block, escalate. Every decision is audited.
 |---|---|---|
 | 0 | Packaging patch for vlm-guard (docs/upstream), repo scaffold, CI | done (patch not yet applied upstream) |
 | 1 | Schemas, questions v0.1-draft, backends (replay, recording, simulated, live SDK), calibration, policy, rule pack, resolver, engine, audit, offline tests | done |
-| 1 | Eval dataset schema, gold policy, 125 draft items, DATASHEET | done (labels unreviewed) |
+| 1 | Eval dataset schema, gold policy, 130 items, DATASHEET | done (12 clinician-reviewed, 5 rule-applied, rest drafts) |
 | 2 | Eval harness, metrics with Wilson intervals, rules-only baseline run | next |
 | 2 | Grow dataset to about 240, clinician review of labels, LLM judge baseline | later |
 | 3 | Record real Jev on dev (needs key), tune wording on dev only, fit calibration and thresholds, freeze, run test once, judge run, ablations | later |

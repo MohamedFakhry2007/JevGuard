@@ -39,7 +39,7 @@ class EvalItem(BaseModel):
     origin: Literal["mutation", "hand_written", "safe_base"]
     tags: list[str] = Field(default_factory=list)
     synthetic: bool = True
-    review_status: Literal["draft_unreviewed", "reviewed"] = "draft_unreviewed"
+    review_status: Literal["draft_unreviewed", "reviewed", "rule_applied"] = "draft_unreviewed"
     source_ref: str | None = None  # e.g. a HeartSafe golden question id used only as a prompt seed
     question: str
     context: str = ""

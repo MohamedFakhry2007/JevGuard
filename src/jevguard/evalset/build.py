@@ -86,7 +86,7 @@ def _apply_review(it: EvalItem) -> EvalItem:
         return it
     labels = it.labels.model_copy(update=r.get("labels", {}))
     return it.model_copy(update={
-        "labels": labels, "expected_action": expected_action(labels), "review_status": "reviewed",
+        "labels": labels, "expected_action": expected_action(labels), "review_status": r.get("status", "reviewed"),
         "clinician_verdict": r["verdict"], "category": r.get("category", it.category),
     })
 
