@@ -12,8 +12,9 @@ requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.0",
     "pyyaml>=6.0",
-    # Pinned to main, which carries the build-backend fix. Pin a release tag once one exists.
-    "vlm-guard @ git+https://github.com/MohamedFakhry2007/vlm-guard.git@main",
+    # v0.2.0 of VLM-Guard (claim rules, cross-claim rules, text pipeline) lives on its master branch, not main.
+    # Pinned to a commit until a release tag exists.
+    "vlm-guard @ git+https://github.com/MohamedFakhry2007/vlm-guard.git@b2b0991709d39a561438645321f527124a806dd4",
 ]
 
 [project.optional-dependencies]
