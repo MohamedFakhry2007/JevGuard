@@ -12,9 +12,8 @@ requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.0",
     "pyyaml>=6.0",
-    # Pinned to the branch with the build-backend fix until it is merged to main; then drop
-    # the ref (or pin a release tag).
-    "vlm-guard @ git+https://github.com/MohamedFakhry2007/vlm-guard.git@fix/build-backend",
+    # Pinned to main, which carries the build-backend fix. Pin a release tag once one exists.
+    "vlm-guard @ git+https://github.com/MohamedFakhry2007/vlm-guard.git@main",
 ]
 
 [project.optional-dependencies]
