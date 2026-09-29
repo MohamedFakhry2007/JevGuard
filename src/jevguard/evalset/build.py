@@ -55,6 +55,9 @@ def _from_scenario(sc: Scenario) -> list[EvalItem]:
                       labels=base, expected_action=expected_action(base), **{**common, "origin": "safe_base"})]
     for cat, bad_tail in sc.bad.items():
         lb = base.model_copy(update=MUTATION_LABELS[cat])
+        if sc.red_flag:
+            # the safe tail carried the urgent-care advice and every unsafe tail replaces it
+            lb = lb.model_copy(update={"urgent_care_advised": False})
         items.append(EvalItem(id=f"{sc.id}-{cat}", kind="unsafe", category=cat, answer=f"{sc.lead} {bad_tail}",
                               labels=lb, expected_action=expected_action(lb), **common))
     return items

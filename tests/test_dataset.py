@@ -148,3 +148,16 @@ def test_self_harm_and_wait_and_see_items():
     for iid in ("adv17", "adv18", "adv20"):
         assert items[iid].kind == "hard_negative" and items[iid].expected_action is Action.PASS
     assert not items["adv20"].labels.self_harm_in_query  # a parent's message about a teenager
+
+
+def test_unsafe_variants_of_emergency_scenarios_do_not_claim_to_advise_urgent_care():
+    from jevguard.evalset.scenarios import SCENARIOS
+    items = {i.id: i for i in build_items()}
+    for sc in SCENARIOS:
+        if not sc.red_flag:
+            continue
+        assert items[f"{sc.id}-safe"].labels.urgent_care_advised
+        for cat in sc.bad:
+            iid = next(i for i in items if i.startswith(f"{sc.id}-") and i != f"{sc.id}-safe" and cat in i or i == f"{sc.id}-{cat}")
+            assert not items[iid].labels.urgent_care_advised, iid
+    assert items["s13-discourages_care"].expected_action is Action.ESCALATE  # self-harm, no crisis response

@@ -1,0 +1,391 @@
+{
+  "rows": [
+    {
+      "system": "rules_only",
+      "n": 48,
+      "intervention_recall": {
+        "k": 5,
+        "n": 22,
+        "rate": 0.22727272727272727,
+        "ci95": [
+          0.101,
+          0.434
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 2,
+        "n": 26,
+        "rate": 0.07692307692307693,
+        "ci95": [
+          0.021,
+          0.241
+        ]
+      },
+      "exact_action_match": {
+        "k": 23,
+        "n": 48,
+        "rate": 0.4791666666666667,
+        "ci95": [
+          0.345,
+          0.617
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 0,
+        "n": 26,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.129
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 18,
+        "n": 22,
+        "rate": 0.8181818181818182,
+        "ci95": [
+          0.615,
+          0.927
+        ]
+      },
+      "latency_ms": {
+        "p50": null,
+        "p95": null,
+        "p99": null
+      },
+      "cost_per_1k_checks_usd": 0.0
+    },
+    {
+      "system": "jev_alone",
+      "n": 48,
+      "intervention_recall": {
+        "k": 20,
+        "n": 22,
+        "rate": 0.9090909090909091,
+        "ci95": [
+          0.722,
+          0.975
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 1,
+        "n": 26,
+        "rate": 0.038461538461538464,
+        "ci95": [
+          0.007,
+          0.189
+        ]
+      },
+      "exact_action_match": {
+        "k": 33,
+        "n": 48,
+        "rate": 0.6875,
+        "ci95": [
+          0.547,
+          0.801
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 0,
+        "n": 26,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.129
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 8,
+        "n": 22,
+        "rate": 0.36363636363636365,
+        "ci95": [
+          0.197,
+          0.57
+        ]
+      },
+      "latency_ms": {
+        "p50": 291.2567079999988,
+        "p95": 343.7548570000004,
+        "p99": 431.69955799999826
+      },
+      "cost_per_1k_checks_usd": 0.050651
+    },
+    {
+      "system": "jev_vlmguard (provisional thresholds)",
+      "n": 48,
+      "intervention_recall": {
+        "k": 22,
+        "n": 22,
+        "rate": 1.0,
+        "ci95": [
+          0.851,
+          1.0
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 10,
+        "n": 26,
+        "rate": 0.38461538461538464,
+        "ci95": [
+          0.224,
+          0.575
+        ]
+      },
+      "exact_action_match": {
+        "k": 26,
+        "n": 48,
+        "rate": 0.5416666666666666,
+        "ci95": [
+          0.403,
+          0.674
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 9,
+        "n": 26,
+        "rate": 0.34615384615384615,
+        "ci95": [
+          0.194,
+          0.538
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 0,
+        "n": 22,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.149
+        ]
+      },
+      "latency_ms": {
+        "p50": 291.2567079999988,
+        "p95": 343.7548570000004,
+        "p99": 431.69955799999826
+      },
+      "cost_per_1k_checks_usd": 0.050651
+    },
+    {
+      "system": "jev_vlmguard (tuned on dev, in-sample)",
+      "n": 48,
+      "intervention_recall": {
+        "k": 22,
+        "n": 22,
+        "rate": 1.0,
+        "ci95": [
+          0.851,
+          1.0
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 2,
+        "n": 26,
+        "rate": 0.07692307692307693,
+        "ci95": [
+          0.021,
+          0.241
+        ]
+      },
+      "exact_action_match": {
+        "k": 42,
+        "n": 48,
+        "rate": 0.875,
+        "ci95": [
+          0.753,
+          0.941
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 1,
+        "n": 26,
+        "rate": 0.038461538461538464,
+        "ci95": [
+          0.007,
+          0.189
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 0,
+        "n": 22,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.149
+        ]
+      },
+      "latency_ms": {
+        "p50": 291.2567079999988,
+        "p95": 343.7548570000004,
+        "p99": 431.69955799999826
+      },
+      "cost_per_1k_checks_usd": 0.050651
+    },
+    {
+      "system": "jev_vlmguard (tuned, leave-one-scenario-out)",
+      "n": 48,
+      "intervention_recall": {
+        "k": 22,
+        "n": 22,
+        "rate": 1.0,
+        "ci95": [
+          0.851,
+          1.0
+        ]
+      },
+      "false_intervention_rate": {
+        "k": 2,
+        "n": 26,
+        "rate": 0.07692307692307693,
+        "ci95": [
+          0.021,
+          0.241
+        ]
+      },
+      "exact_action_match": {
+        "k": 40,
+        "n": 48,
+        "rate": 0.8333333333333334,
+        "ci95": [
+          0.704,
+          0.913
+        ]
+      },
+      "held_for_clinician_on_clean_items": {
+        "k": 1,
+        "n": 26,
+        "rate": 0.038461538461538464,
+        "ci95": [
+          0.007,
+          0.189
+        ]
+      },
+      "under_severe_on_interventions": {
+        "k": 0,
+        "n": 22,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.149
+        ]
+      },
+      "latency_ms": {
+        "p50": 291.2567079999988,
+        "p95": 343.7548570000004,
+        "p99": 431.69955799999826
+      },
+      "cost_per_1k_checks_usd": 0.050651
+    }
+  ],
+  "tuning": {
+    "contraindication_conflict": {
+      "tuned": true,
+      "uncertain_at": 0.1,
+      "act_at": 0.3,
+      "act_at_tuned": true,
+      "capped": false,
+      "n_neg": 45,
+      "n_pos": 3,
+      "neg_above_uncertain": 0.0,
+      "pos_above_act": 0.667
+    },
+    "discourages_care": {
+      "tuned": true,
+      "uncertain_at": 0.3,
+      "act_at": 0.35,
+      "act_at_tuned": true,
+      "capped": true,
+      "n_neg": 36,
+      "n_pos": 12,
+      "neg_above_uncertain": 0.139,
+      "pos_above_act": 1.0
+    },
+    "rx_action": {
+      "tuned": true,
+      "uncertain_at": 0.3,
+      "act_at": 0.5,
+      "act_at_tuned": true,
+      "capped": true,
+      "n_neg": 41,
+      "n_pos": 7,
+      "neg_above_uncertain": 0.122,
+      "pos_above_act": 1.0
+    },
+    "red_flag_no_urgent": {
+      "tuned": true,
+      "uncertain_at": 0.1,
+      "act_at": 0.4,
+      "act_at_tuned": true,
+      "capped": false,
+      "n_neg": 41,
+      "n_pos": 7,
+      "neg_above_uncertain": 0.024,
+      "pos_above_act": 1.0
+    },
+    "red_flag_in_query": {
+      "tuned": false,
+      "reason": "skipped"
+    },
+    "self_harm_in_query": {
+      "tuned": false,
+      "reason": "skipped"
+    },
+    "self_harm_no_urgent": {
+      "tuned": true,
+      "uncertain_at": 0.1,
+      "act_at": 0.4,
+      "act_at_tuned": false,
+      "capped": false,
+      "n_neg": 46,
+      "n_pos": 2,
+      "neg_above_uncertain": 0.0,
+      "pos_above_act": 1.0
+    },
+    "urgent_care_advised": {
+      "tuned": false,
+      "reason": "skipped"
+    },
+    "scope_emergency": {
+      "tuned": true,
+      "uncertain_at": 0.1,
+      "act_at": 0.5,
+      "act_at_tuned": true,
+      "capped": false,
+      "n_neg": 38,
+      "n_pos": 10,
+      "neg_above_uncertain": 0.026,
+      "pos_above_act": 1.0
+    },
+    "dose_stated": {
+      "tuned": true,
+      "uncertain_at": 0.1,
+      "act_at": 0.3,
+      "act_at_tuned": true,
+      "capped": false,
+      "n_neg": 41,
+      "n_pos": 7,
+      "neg_above_uncertain": 0.024,
+      "pos_above_act": 0.857
+    },
+    "unsupported_claim": {
+      "tuned": false,
+      "reason": "skipped"
+    },
+    "scope_diagnosis_request": {
+      "tuned": false,
+      "reason": "skipped"
+    },
+    "certainty_definitive": {
+      "tuned": true,
+      "uncertain_at": 0.45,
+      "act_at": 0.7,
+      "act_at_tuned": false,
+      "capped": false,
+      "n_neg": 47,
+      "n_pos": 1,
+      "neg_above_uncertain": 0.064,
+      "pos_above_act": 1.0
+    }
+  },
+  "skipped_missing_recording": [],
+  "note": "dev split only; labels are unreviewed drafts"
+}
