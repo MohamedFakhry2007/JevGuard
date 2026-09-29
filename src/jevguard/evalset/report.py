@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from jevguard.evalset.metrics import wilson
+
 REPO = Path(__file__).resolve().parents[3]
 FINAL = REPO / "eval" / "results" / "final" / "test_v0.2.json"
 DEV = REPO / "eval" / "results" / "v0.2" / "ablation_dev.json"
@@ -30,7 +32,8 @@ NAMES = {
 def rate(x: dict[str, Any]) -> str:
     if x["rate"] is None:
         return "n/a"
-    return f"{x['k']}/{x['n']} ({x['rate']:.0%}; {x['ci95'][0]:.0%} to {x['ci95'][1]:.0%})"
+    lo, hi = wilson(x["k"], x["n"])  # from the counts, not from the 3-decimal values stored in the JSON
+    return f"{x['k']}/{x['n']} ({x['rate']:.0%}; {lo:.0%} to {hi:.0%})"
 
 
 def table(rows: list[dict[str, Any]]) -> str:

@@ -69,7 +69,7 @@ Model `jev-1.13.0`, question set `v0.2-draft`, frozen policy `b29ebae75cb8`, run
 | System | Problems caught | Clean answers wrongly acted on | Exact right action | Problems given too weak an action | Clean answers held for a clinician |
 |---|---|---|---|---|---|
 | Keyword rules only (no model) | 8/38 (21%; 11% to 36%) | 4/44 (9%; 4% to 21%) | 39/82 (48%; 37% to 58%) | 31/38 (82%; 67% to 91%) | 0/44 (0%; 0% to 8%) |
-| Jev alone, one 50% cutoff | 36/38 (95%; 83% to 98%) | 2/44 (5%; 1% to 15%) | 60/82 (73%; 63% to 82%) | 11/38 (29%; 17% to 45%) | 0/44 (0%; 0% to 8%) |
+| Jev alone, one 50% cutoff | 36/38 (95%; 83% to 99%) | 2/44 (5%; 1% to 15%) | 60/82 (73%; 63% to 82%) | 11/38 (29%; 17% to 45%) | 0/44 (0%; 0% to 8%) |
 | **Jev + VLM-Guard rules, frozen thresholds** | 38/38 (100%; 91% to 100%) | 6/44 (14%; 6% to 27%) | 65/82 (79%; 69% to 87%) | 0/38 (0%; 0% to 9%) | 3/44 (7%; 2% to 18%) |
 
 Ranges are 95% Wilson intervals. "Problems" are the answers whose gold action is correct, block or escalate.
@@ -96,8 +96,8 @@ Time inside the Jev call: median 282 ms, 95th percentile 327 ms. The rule layer 
 
 | System | Problems caught | Clean answers wrongly acted on | Exact right action | Problems given too weak an action | Clean answers held for a clinician |
 |---|---|---|---|---|---|
-| Keyword rules only (no model) | 5/22 (23%; 10% to 43%) | 2/26 (8%; 2% to 24%) | 23/48 (48%; 34% to 62%) | 18/22 (82%; 62% to 93%) | 0/26 (0%; 0% to 13%) |
-| Jev alone, one 50% cutoff | 20/22 (91%; 72% to 98%) | 1/26 (4%; 1% to 19%) | 33/48 (69%; 55% to 80%) | 8/22 (36%; 20% to 57%) | 0/26 (0%; 0% to 13%) |
+| Keyword rules only (no model) | 5/22 (23%; 10% to 43%) | 2/26 (8%; 2% to 24%) | 23/48 (48%; 34% to 62%) | 18/22 (82%; 61% to 93%) | 0/26 (0%; 0% to 13%) |
+| Jev alone, one 50% cutoff | 20/22 (91%; 72% to 97%) | 1/26 (4%; 1% to 19%) | 33/48 (69%; 55% to 80%) | 8/22 (36%; 20% to 57%) | 0/26 (0%; 0% to 13%) |
 | Jev + rules, starting thresholds | 22/22 (100%; 85% to 100%) | 10/26 (38%; 22% to 57%) | 26/48 (54%; 40% to 67%) | 0/22 (0%; 0% to 15%) | 9/26 (35%; 19% to 54%) |
 | Jev + rules, tuned on these answers | 22/22 (100%; 85% to 100%) | 2/26 (8%; 2% to 24%) | 42/48 (88%; 75% to 94%) | 0/22 (0%; 0% to 15%) | 1/26 (4%; 1% to 19%) |
 | Jev + rules, tuned, scenario held out | 22/22 (100%; 85% to 100%) | 2/26 (8%; 2% to 24%) | 40/48 (83%; 70% to 91%) | 0/22 (0%; 0% to 15%) | 1/26 (4%; 1% to 19%) |
